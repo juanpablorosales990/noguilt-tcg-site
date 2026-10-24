@@ -55,7 +55,7 @@ gl_FragColor.rgb+=(hash(gl_FragCoord.xy)-0.5)/255.0; }`,
 });
 const skyMesh = new THREE.Mesh(new THREE.SphereGeometry(300, 48, 24), skyMat);
 skyMesh.renderOrder = -2; skyMesh.frustumCulled = false; scene.add(skyMesh);
-const cloudU = { uMap: { value: null }, uGrid: { value: new THREE.Vector2(3, 2) }, uLit: { value: new THREE.Color() }, uShade: { value: new THREE.Color() }, uFog: { value: 0.007 }, uNearK: { value: new THREE.Vector2(0.25, 0.8) }, uFar: { value: new THREE.Vector2(150, 220) } };
+const cloudU = { uMap: { value: null }, uGrid: { value: new THREE.Vector2(3, 2) }, uLit: { value: new THREE.Color() }, uShade: { value: new THREE.Color() }, uFog: { value: 0.007 }, uNearK: { value: new THREE.Vector2(0.45, 1.2) }, uFar: { value: new THREE.Vector2(150, 220) } };
 function setPalette(t) {
   const i = Math.min(PAL.length - 2, Math.floor(t)), k = clamp(t - i), a = PAL[i], b = PAL[i + 1];
   sky.uZenith.value.lerpColors(a.z, b.z, k); sky.uMid.value.lerpColors(a.m, b.m, k); sky.uHorizon.value.lerpColors(a.h, b.h, k); sky.uBelow.value.lerpColors(a.b, b.b, k);
@@ -107,12 +107,18 @@ let cloudMesh, cloudData; const clouds = [];
 async function buildClouds() {
   const map = await new Promise((r) => new THREE.TextureLoader().load(NG.shared + (COARSE ? 'clouds-256.webp' : 'clouds-512.webp'), r));
   map.colorSpace = THREE.NoColorSpace; cloudU.uMap.value = map;
-  const scale = COARSE ? 0.75 : 1, total = DECKS.reduce((s, d) => s + Math.round(d.n * scale), 0);
+  const scale = COARSE ? 0.62 : 1, total = DECKS.reduce((s, d) => s + Math.round(d.n * scale), 0) + 4 * (COARSE ? 5 : 8);
   const geo = new THREE.PlaneGeometry(1, 1);
   cloudData = new THREE.InstancedBufferAttribute(new Float32Array(total * 4), 4).setUsage(THREE.DynamicDrawUsage); geo.setAttribute('aData', cloudData);
   cloudMesh = new THREE.InstancedMesh(geo, new THREE.ShaderMaterial({ uniforms: { ...sky, ...cloudU }, vertexShader: cloudVS, fragmentShader: cloudFS, transparent: true, depthWrite: false, side: THREE.DoubleSide, toneMapped: false }), total);
   cloudMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cloudMesh.frustumCulled = false; cloudMesh.renderOrder = 1; scene.add(cloudMesh);
   const r = rng(11);
+  for (const ay of [A.hero, A.line, A.extra, A.open]) {
+    for (let i = 0; i < (COARSE ? 5 : 8); i++) {
+      const side = i % 2 ? 1 : -1, h = 1.8 + r() * 1.6;
+      clouds.push({ x: side * (2.2 + r() * 2.2), y: ay + (r() * 2 - 1) * 1.6 - 0.6, z: 1.2 + r() * 2.2, h, w: h * (2.0 + r() * 0.4) * side, tile: Math.floor(r() * 6), op: 0.32 + r() * 0.2, vx: 0, ph: r() * 6.28, depth: 0, near: true });
+    }
+  }
   for (const d of DECKS) {
     const n = Math.round(d.n * scale), transit = TRANSIT.includes(d.y);
     for (let i = 0; i < n; i++) {
@@ -125,12 +131,12 @@ async function buildClouds() {
 const fwd = new THREE.Vector3();
 function updateClouds(dt, t) {
   if (!cloudMesh) return; camera.getWorldDirection(fwd); const cp = camera.position;
-  for (const c of clouds) { c.x += c.vx * dt; if (c.x > 48) c.x -= 96; c.depth = (c.x - cp.x) * fwd.x + (c.y - cp.y) * fwd.y + (c.z - cp.z) * fwd.z; }
+  for (const c of clouds) { if (!c.near) { c.x += c.vx * dt; if (c.x > 48) c.x -= 96; } c.depth = (c.x - cp.x) * fwd.x + (c.y - cp.y) * fwd.y + (c.z - cp.z) * fwd.z; }
   clouds.sort((a, b) => b.depth - a.depth);
   const m = cloudMesh.instanceMatrix.array, d = cloudData.array;
   for (let i = 0; i < clouds.length; i++) { const c = clouds[i], o = i * 16, k = i * 4, br = 1 + 0.025 * Math.sin(t * 0.3 + c.ph);
     m[o] = 1; m[o + 5] = 1; m[o + 10] = 1; m[o + 15] = 1; m[o + 12] = c.x; m[o + 13] = c.y; m[o + 14] = c.z;
-    d[k] = c.w * br; d[k + 1] = c.h * br; d[k + 2] = c.tile; d[k + 3] = c.op * (1 - smooth(36, 48, Math.abs(c.x))); }
+    d[k] = c.w * br; d[k + 1] = c.h * br; d[k + 2] = c.tile; d[k + 3] = c.op * (c.near ? 1 : 1 - smooth(36, 48, Math.abs(c.x))); }
   cloudMesh.instanceMatrix.needsUpdate = true; cloudData.needsUpdate = true;
 }
 
@@ -208,7 +214,7 @@ async function packWithCards(P) {
 // ---------- scene 1: hero + tear ----------
 const heroRoot = new THREE.Group(); heroRoot.position.y = A.hero; scene.add(heroRoot);
 let H = null; const heroBlob = blob(1.5, 0.8); heroRoot.add(heroBlob);
-async function buildHero() { H = await packWithCards(NG.hero); heroRoot.add(H.pk.root); heroBlob.position.set(0, -H.pk.PH * 0.5 - 0.8, 0); }
+async function buildHero() { H = await packWithCards(NG.hero); heroRoot.add(H.pk.root); heroBlob.position.set(0, -H.pk.PH * 0.5 - 0.8, 0); buildPath(); }
 function updateHero(s, time) {
   if (!H) return; heroRoot.visible = s < 2.2; if (!heroRoot.visible) return;
   const e = clamp(s - 1), P = H.pk.root, idle = 1 - seg(e, 0, 0.12);
@@ -218,7 +224,7 @@ function updateHero(s, time) {
   H.pk.top.position.set(1.4 * tf, 2.0 * tf, 0.35 * tf); H.pk.top.rotation.set(0.5 * tf, -0.4 * tf, -1.0 * tf); H.pk.top.visible = tf < 0.999;
   const n = H.cards.length, allOut = 0.2 + 0.025 * (n - 1) + 0.18;
   const back = ease(seg(e, allOut + 0.02, allOut + 0.16)); // body only moves after every card is out
-  H.pk.body.position.set(0, -back * 2.4, -back * 1.2); H.pk.body.rotation.x = -back * 0.35;
+  H.pk.body.position.set(0, -back * 1.1, -back * 2.2); H.pk.body.rotation.x = -back * 0.2; H.pk.body.scale.setScalar(Math.max(0.001, 1 - back * 0.999)); H.pk.body.visible = back < 0.995;
   heroBlob.material.opacity = 0.85 * (1 - back);
   const fan = ease(seg(e, allOut + 0.02, allOut + 0.2)), hit = ease(seg(e, allOut + 0.24, allOut + 0.38));
   const cs = NG.hero.cardScale, R = (MOB ? 0.82 : 1.15) * cs;
@@ -233,7 +239,7 @@ function updateHero(s, time) {
     else { z -= hit * 0.45; }
     c.position.set(x, y, z); c.rotation.set(0, ry, rz); c.scale.setScalar(sc);
   });
-  const ex = ease(seg(s, 1.9, 2.05)); heroRoot.position.set(0, A.hero + ex * 5, -ex * 2);
+  const ex = ease(seg(s, 1.86, 2.0)); heroRoot.position.set(0, A.hero, -ex * 2.5); heroRoot.scale.setScalar(Math.max(0.001, 1 - ex)); heroRoot.visible = ex < 0.995;
   const cnt = $('#count'); if (cnt) cnt.textContent = String(Math.round(n * seg(e, 0.2, 0.4)));
 }
 
@@ -256,7 +262,7 @@ async function buildLine() {
       const p = makePack(f, b, it.aspect, { lo: true }); p.root.scale.setScalar(sc * (it.scale || 1));
       const px = (k - (n - 1) / 2) * gap, pivot = new THREE.Group();
       if (L.rails) { pivot.position.set(px, y + 0.95 * sc, 0); p.root.position.set(0, -(p.PH / 2 - 0.035 * p.PH) * sc * (it.scale || 1), 0); }
-      else pivot.position.set(px, y, (k % 2) * -0.25);
+      else pivot.position.set(px, y, 0);
       pivot.add(p.root); lineRoot.add(pivot);
       pivot.userData = { i: idx++, base: pivot.position.clone(), it, lift: 0 }; items.push(pivot);
     }));
@@ -266,7 +272,7 @@ function updateLine(s, time, dt) {
   lineRoot.visible = s > 1.92 && s < 3.2; if (!lineRoot.visible) return;
   const w = s - 2;
   items.forEach((p) => {
-    const u = p.userData, k = easeOut(seg(w, 0.04 + u.i * 0.03, 0.22 + u.i * 0.03));
+    const u = p.userData, k = easeOut(seg(w, 0.17 + u.i * 0.025, 0.36 + u.i * 0.025));
     u.lift = lerp(u.lift, picked === p ? 1 : 0, 1 - Math.pow(0.002, dt));
     p.visible = k > 0.001;
     p.position.set(u.base.x, u.base.y + (1 - k) * 1.2 + (NG.line.rails ? 0 : Math.sin(time * 0.9 + u.i) * 0.04) + u.lift * 0.12, u.base.z + u.lift * 0.35);
@@ -340,7 +346,7 @@ const openRoot = new THREE.Group(); openRoot.position.y = A.open; scene.add(open
 let O = null, opState = 0, opBusy = false; const opBlob = blob(1.5, 0.8); openRoot.add(opBlob);
 async function buildOpen() { O = await packWithCards(NG.hero); openRoot.add(O.pk.root); opBlob.position.set(0, -O.pk.PH * 0.5 - 0.8, 0); resetOpen(); }
 function resetOpen() {
-  opState = 0; const k = O.pk; k.top.position.set(0, 0, 0); k.top.rotation.set(0, 0, 0); k.top.visible = true; k.body.position.set(0, 0, 0); k.body.rotation.set(0, 0, 0);
+  opState = 0; const k = O.pk; k.top.position.set(0, 0, 0); k.top.rotation.set(0, 0, 0); k.top.visible = true; k.body.position.set(0, 0, 0); k.body.rotation.set(0, 0, 0); k.body.scale.setScalar(1);
   O.cards.forEach((m) => { m.position.set(0, O.cy, m.userData.z0); m.rotation.set(0, 0, 0); m.scale.setScalar(NG.hero.cardScale); });
   $('#openhint').textContent = 'Tap the pack'; $('#again').hidden = true; $('#openbtn').hidden = false; $('#hitmsg').classList.remove('on');
 }
@@ -351,7 +357,7 @@ async function tapOpen() {
     await tween(0.45, (t) => { k.top.position.set(1.2 * t, 1.8 * t, 0.3 * t); k.top.rotation.set(0.5 * t, -0.4 * t, -1.0 * t); }, easeOut);
     k.top.visible = false;
     await Promise.all(O.cards.map((m, i) => tween(0.55, (t) => { m.position.y = O.cy + t * O.rise; const o = seg(t, 0.9, 1); m.position.z = m.userData.z0 * (1 - o) + o * (0.05 + (n - 1 - i) * 0.006); })));
-    tween(0.5, (t) => { k.body.position.set(0, -0.7 * t, -0.5 * t); });
+    tween(0.5, (t) => { k.body.position.set(0, -0.25 * t, -1.3 * t); k.body.scale.setScalar(1 - 0.25 * t); });
     opState = 1; $('#openhint').textContent = 'Tap to reveal';
   } else {
     const i = opState - 1, m = O.cards[i], y0 = m.position.y, z0 = m.position.z;
@@ -360,8 +366,8 @@ async function tapOpen() {
       $('#hitmsg').classList.add('on'); setTimeout(() => $('#hitmsg').classList.remove('on'), 2200); burst();
       $('#openhint').textContent = NG.hitHint; $('#again').hidden = false; $('#openbtn').hidden = true; opState = 99;
     } else {
-      const x = (MOB ? -0.55 : 0.85) * cs + i * (MOB ? 0.2 : 0.3) * cs;
-      await tween(0.42, (t) => { m.position.set(lerp(0, x, t), lerp(y0, (MOB ? 1.25 : 0.25) * cs, t) + Math.sin(t * Math.PI) * 0.2, lerp(z0, 0.3 + i * 0.02, t)); m.rotation.z = lerp(0, 0.06 - i * 0.03, t); m.scale.setScalar(cs * lerp(1, MOB ? 0.45 : 0.6, t)); });
+      const x = (-0.3 + i * 0.2) * cs;
+      await tween(0.42, (t) => { m.position.set(lerp(0, x, t), lerp(y0, (MOB ? 1.3 : 0.95) * cs, t) + Math.sin(t * Math.PI) * 0.15, lerp(z0, 0.3 + i * 0.02, t)); m.rotation.z = lerp(0, 0.045 - i * 0.03, t); m.scale.setScalar(cs * lerp(1, 0.42, t)); });
       opState++; if (opState === n) $('#openhint').textContent = 'The last card';
     }
   }
@@ -386,23 +392,41 @@ let K = [];
 function buildPath() {
   const M = MOB, d = (desk, mob) => (M ? mob : desk);
   const X = NG.extra.cam;
+  // narrower desktop screens (tablets, folds, 4:3) pull the camera back so the stage never reaches the copy
+  const asp = VW() / VH(), am = M ? 1 : clamp(1.62 / asp, 1, 1.45), cs = NG.hero.cardScale || 1, hf = 1 + (cs - 1) * 0.6;
+  const topY = H ? H.cy + H.rise + (CH * cs) / 2 : 1.3, rz = Math.max(0, topY - 1.25) * 1.7, ry = Math.max(0, topY - 1.25) * 0.45;
+  const hz = d(5.0, 6.6) * am, lz = d(NG.line.cam, NG.line.camMobile) * am, xz = d(X.z, X.zMobile) * am, oz = d(5.0, 6.8) * am * hf, ly = A.line + d(0.35, 0.25);
   K = [
-    { s: 0, p: [0, 0.1, d(5.0, 6.6)], l: [0, 0, 0] },
-    { s: 1.0, p: [0, 0.1, d(5.0, 6.6)], l: [0, 0, 0] },
-    { s: 1.2, p: [0.15, 0.2, d(4.5, 6.0)], l: [0, 0.2, 0] },
-    { s: 1.55, p: [0, 0.35, d(5.3, 7.2)], l: [0, 0.35, 0.3] },
-    { s: 1.92, p: [0, 0.3, d(5.0, 6.8)], l: [0, 0.2, 0.4] },
-    { s: 2.1, p: [0, A.line + 0.2, d(NG.line.cam, NG.line.camMobile)], l: [0, A.line + d(0.35, 0.25), 0] },
-    { s: 2.95, p: [0.25, A.line + 0.05, d(NG.line.cam - 0.8, NG.line.camMobile - 0.6)], l: [0, A.line + d(0.35, 0.25), 0] },
-    { s: 3.1, p: [0, A.extra + X.y, d(X.z, X.zMobile)], l: [0, A.extra + X.ly, X.lz] },
-    { s: 3.92, p: [0.25, A.extra + X.y, d(X.z - 0.4, X.zMobile - 0.4)], l: [0, A.extra + X.ly, X.lz] },
-    { s: 4.1, p: [0, A.open + 0.1, d(5.0, 6.8)], l: [0, A.open + (M ? 0.3 : 0.1), 0] },
-    { s: 9, p: [0, A.open + 0.1, d(5.0, 6.8)], l: [0, A.open + (M ? 0.3 : 0.1), 0] },
+    { s: 0, p: [0.35, 0.05, hz + 0.3], l: [0, 0, 0] },
+    { s: 0.5, p: [0.35, 0.05, hz + 0.3], l: [0, 0, 0] },
+    { s: 1.0, p: [-0.3, 0.3, hz - 0.35], l: [0, 0.08, 0] },
+    { s: 1.22, p: [0.1, 0.25 + ry, hz - 0.55 + rz], l: [0, 0.22 + ry, 0] },
+    { s: 1.5, p: [0.3, 0.38, (hz + 0.25) * hf], l: [0, 0.35, 0.3] },
+    { s: 1.8, p: [-0.25, 0.3, hz * hf], l: [0, 0.2, 0.4] },
+    { s: 1.88, p: [-0.3, 0.2, hz + 0.2], l: [0, 0.1, 0.4] },
+    { s: 2.16, p: [-0.7, A.line + 0.45, lz + 0.4], l: [0, ly, 0] },
+    { s: 2.86, p: [0.7, A.line + 0.0, lz - 0.7], l: [0, ly, 0] },
+    { s: 2.9, p: [0.72, A.line - 0.05, lz - 0.75], l: [0, ly, 0] },
+    { s: 3.16, p: [-0.6, A.extra + X.y + 0.25, xz + 0.3], l: [0, A.extra + X.ly, X.lz] },
+    { s: 3.86, p: [0.6, A.extra + X.y - 0.1, xz - 0.4], l: [0, A.extra + X.ly, X.lz] },
+    { s: 3.9, p: [0.62, A.extra + X.y - 0.12, xz - 0.42], l: [0, A.extra + X.ly, X.lz] },
+    { s: 4.16, p: [0.25, A.open + 0.2, oz + 0.2], l: [0, A.open + (M ? 0.3 : 0.1), 0] },
+    { s: 4.7, p: [0, A.open + 0.1, oz], l: [0, A.open + (M ? 0.3 : 0.1), 0] },
+    { s: 9, p: [0, A.open + 0.1, oz], l: [0, A.open + (M ? 0.3 : 0.1), 0] },
   ];
 }
 const camP = new THREE.Vector3(), camL = new THREE.Vector3();
-function camAt(s) { let i = 0; while (i < K.length - 2 && s > K[i + 1].s) i++; const a = K[i], b = K[i + 1], t = ease(seg(s, a.s, b.s));
-  camP.set(lerp(a.p[0], b.p[0], t), lerp(a.p[1], b.p[1], t), lerp(a.p[2], b.p[2], t)); camL.set(lerp(a.l[0], b.l[0], t), lerp(a.l[1], b.l[1], t), lerp(a.l[2], b.l[2], t)); }
+function camAt(s) {
+  let i = 0; while (i < K.length - 2 && s > K[i + 1].s) i++;
+  const k0 = K[Math.max(0, i - 1)], k1 = K[i], k2 = K[i + 1], k3 = K[Math.min(K.length - 1, i + 2)], t = seg(s, k1.s, k2.s);
+  const cr = (a, b, c, d) => { const t2 = t * t, t3 = t2 * t; return 0.5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3); };
+  const far = Math.abs(k2.p[1] - k1.p[1]) > 5 || Math.abs(k1.p[1] - k0.p[1]) > 5 || Math.abs(k3.p[1] - k2.p[1]) > 5;
+  const e2 = Math.abs(k2.p[1] - k1.p[1]) > 5 ? ease(t) : t;
+  for (let j = 0; j < 3; j++) {
+    camP.setComponent(j, far ? lerp(k1.p[j], k2.p[j], e2) : cr(k0.p[j], k1.p[j], k2.p[j], k3.p[j]));
+    camL.setComponent(j, far ? lerp(k1.l[j], k2.l[j], e2) : cr(k0.l[j], k1.l[j], k2.l[j], k3.l[j]));
+  }
+}
 
 // ---------- scroll -> story, sticky copy steps ----------
 const secs = $$('[data-s]'); let tops = [];
@@ -439,7 +463,7 @@ function adapt(dt) { acc += dt; frames++; if (acc < 1.5) return; const ms = (100
 function frame(t) {
   if (!running) return;
   const dt = Math.min(0.05, (t - last) / 1000); last = t; now = t / 1000;
-  const target = storyTarget(); sNow += (target - sNow) * (1 - Math.exp(-dt * (REDUCE ? 30 : 9))); if (Math.abs(target - sNow) < 1e-4) sNow = target;
+  const target = storyTarget(); sNow += (target - sNow) * (1 - Math.exp(-dt * (REDUCE ? 30 : 6.5))); if (Math.abs(target - sNow) < 1e-4) sNow = target;
   ptr.sx += (ptr.x - ptr.sx) * (1 - Math.exp(-dt * 3)); ptr.sy += (ptr.y - ptr.sy) * (1 - Math.exp(-dt * 3));
   runTweens(); steps(target);
   const time = REDUCE ? 0 : now;
@@ -452,14 +476,25 @@ function frame(t) {
   sky.uWhite.value = white; cloudU.uFog.value = 0.007 + white * 0.06;
   if (!COARSE && lineRoot.visible && sNow > 2.08 && sNow < 3.0 && ptr.cx >= 0 && !down) { const h = hitTest(ptr.cx, ptr.cy, items); const o = h ? owner(h.object) : null; if (o && o !== picked) showDetail(o); canvas.style.cursor = o ? 'pointer' : ''; }
   if ((sNow < 2.02 || sNow > 3.05) && picked) showDetail(null);
-  updateClouds(dt, time); renderer.render(scene, camera); adapt(dt); requestAnimationFrame(frame);
+  updateClouds(dt, time); renderer.render(scene, camera); adapt(dt); if (fstats.length < 20000) fstats.push(t - (fprev || t)); fprev = t; requestAnimationFrame(frame);
 }
 
 // ---------- boot ----------
 resize(); setPalette(0); scene.environment = buildEnv();
-Promise.all([buildHero(), buildClouds()]).then(() => {
-  document.documentElement.classList.add('ready'); requestAnimationFrame(frame);
-  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 250)); idle(() => { buildLine(); buildExtra(); buildOpen(); });
+Promise.all([buildHero(), buildClouds(), buildLine(), buildExtra(), buildOpen()]).then(async () => {
+  try { await renderer.compileAsync(scene, camera); } catch (e) { renderer.compile(scene, camera); }
+  for (const p of cache.values()) { const t = await p; if (t) renderer.initTexture(t); }
+  document.documentElement.classList.add('ready'); last = performance.now(); requestAnimationFrame(frame);
 });
 addEventListener('load', measure);
-window.__ng3d = { get s() { return sNow; }, renderer, get opState() { return opState; } };
+const fstats = []; let fprev = 0;
+function bounds() {
+  const out = [], box = new THREE.Box3(), v = new THREE.Vector3();
+  const groups = [...(H && heroRoot.scale.x > 0.6 ? H.cards : []), H && heroRoot.scale.x > 0.6 && H.pk.body.scale.x > 0.6 && H.pk.body, ...items, PL && PL.root, ...(O ? O.cards : []), O && O.pk.body].filter(Boolean);
+  for (const g of groups) { let vis = true, o = g; while (o) { if (!o.visible) { vis = false; break; } o = o.parent; } if (!vis) continue;
+    box.setFromObject(g); if (box.isEmpty()) continue; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    for (const cx of [box.min.x, box.max.x]) for (const cy of [box.min.y, box.max.y]) for (const cz of [box.min.z, box.max.z]) { v.set(cx, cy, cz).project(camera); x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y); }
+    out.push({ name: g.userData && g.userData.it ? g.userData.it.name : (g.type || 'obj'), l: (x0 + 1) / 2, r: (x1 + 1) / 2, t: (1 - y1) / 2, b: (1 - y0) / 2 }); }
+  return out;
+}
+window.__ng3d = { get s() { return sNow; }, renderer, get opState() { return opState; }, bounds, fstats };
