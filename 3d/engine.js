@@ -378,7 +378,9 @@ const sparks = (() => { const n = 160, g = new THREE.BufferGeometry(), p = new F
   const m = new THREE.PointsMaterial({ size: 0.04, color: 0xffd36b, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }); openRoot.add(new THREE.Points(g, m)); return { g, p, v, m, n, t: 9 }; })();
 function burst() { for (let i = 0; i < sparks.n; i++) { sparks.p.set([0, 0.1, 1.0], i * 3); const d = new THREE.Vector3().randomDirection().multiplyScalar(1.0 + Math.random() * 1.6); sparks.v.set([d.x, d.y, d.z * 0.5], i * 3); } sparks.t = 0; sparks.m.opacity = 1; }
 function updateOpen(s, time, dt) {
-  openRoot.visible = s > 3.92; if (!O || !openRoot.visible) return;
+  const gone = ease(seg(s, 4.78, 5.05)); // reaching the wholesale card: the pack shrinks back into the clouds
+  openRoot.scale.setScalar(Math.max(0.001, 1 - gone)); openRoot.position.z = -gone * 3;
+  openRoot.visible = s > 3.92 && gone < 0.995; if (!O || !openRoot.visible) return;
   const R = O.pk.root;
   if (opState === 0) { R.rotation.set(0, Math.sin(time * 0.6) * 0.1 + ptr.sx * 0.15, Math.sin(time * 0.4) * 0.02); R.position.y = Math.sin(time * 1.05) * 0.04; }
   else { R.rotation.y *= 0.9; R.rotation.z *= 0.9; R.position.y *= 0.9; }
