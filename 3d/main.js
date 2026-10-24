@@ -25,13 +25,14 @@ try {
 } catch (e) { document.documentElement.classList.add('nogl'); throw e; }
 let dpr = Math.min(devicePixelRatio, COARSE ? 1.5 : 1.75);
 renderer.setPixelRatio(dpr);
-renderer.setSize(innerWidth, innerHeight, false);
+const VW = () => canvas.clientWidth || innerWidth, VH = () => canvas.clientHeight || innerHeight;
+renderer.setSize(VW(), VH(), false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.95;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.1, 400);
+const camera = new THREE.PerspectiveCamera(35, VW() / VH(), 0.1, 400);
 
 // ---------- sky (palette shifts with the story) ----------
 const PAL = [ // afternoon -> golden -> dusk
@@ -305,7 +306,7 @@ function updateLineup(s, time, dt) {
   const lab = $('#plabel');
   if (hovered) {
     const v = hovered.getWorldPosition(new THREE.Vector3()); v.y -= 1.15; v.project(camera);
-    lab.style.transform = `translate(${(v.x * 0.5 + 0.5) * innerWidth}px, ${(-v.y * 0.5 + 0.5) * innerHeight}px) translate(-50%, 0)`;
+    lab.style.transform = `translate(${(v.x * 0.5 + 0.5) * VW()}px, ${(-v.y * 0.5 + 0.5) * VH()}px) translate(-50%, 0)`;
   }
 }
 function setHover(p) {
@@ -357,7 +358,7 @@ function updateRoute(s, time) {
     const at = +el.dataset.at, on = p > at;
     el.classList.toggle('on', on);
     const v = routeRoot.userData.curve.getPointAt(at).clone().add(routeRoot.position); v.project(camera);
-    const hw = el.offsetWidth / 2 + 10; el.style.transform = `translate(${clamp((v.x * 0.5 + 0.5) * innerWidth, hw, innerWidth - hw)}px, ${(-v.y * 0.5 + 0.5) * innerHeight}px) translate(-50%, -140%)`;
+    const hw = el.offsetWidth / 2 + 10; el.style.transform = `translate(${clamp((v.x * 0.5 + 0.5) * VW(), hw, VW() - hw)}px, ${(-v.y * 0.5 + 0.5) * VH()}px) translate(-50%, -140%)`;
   });
   travellers.forEach((m) => {
     const u = (m.userData.off + time * 0.045) % 1, vis = u < p - 0.02;
@@ -447,7 +448,7 @@ let sNow = 0;
 
 // ---------- input ----------
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(); let down = null;
-function hitTest(x, y, objs) { ndc.set((x / innerWidth) * 2 - 1, -(y / innerHeight) * 2 + 1); ray.setFromCamera(ndc, camera); return ray.intersectObjects(objs, true)[0]; }
+function hitTest(x, y, objs) { ndc.set((x / VW()) * 2 - 1, -(y / VH()) * 2 + 1); ray.setFromCamera(ndc, camera); return ray.intersectObjects(objs, true)[0]; }
 function ownerPouch(o) { while (o && !pouches.includes(o)) o = o.parent; return o; }
 canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY }; });
 addEventListener('pointerup', (e) => {
@@ -459,10 +460,11 @@ $('#again').addEventListener('click', resetOpen); $('#openbtn').addEventListener
 
 // ---------- loop ----------
 let last = performance.now(), running = true, acc = 0, frames = 0;
-function resize() { MOB = matchMedia('(max-width: 760px)').matches; camera.aspect = innerWidth / innerHeight; camera.fov = MOB ? 42 : 35; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight, false); measure(); buildPath(); }
+let lastW = 0, lastH = 0;
+function resize() { const w = VW(), h = VH(); MOB = matchMedia('(max-width: 760px)').matches; measure(); buildPath(); if (w === lastW && h === lastH) return; lastW = w; lastH = h; camera.aspect = w / h; camera.fov = MOB ? 42 : 35; camera.updateProjectionMatrix(); renderer.setSize(w, h, false); }
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 120); });
 document.addEventListener('visibilitychange', () => { running = !document.hidden; if (running) { last = performance.now(); requestAnimationFrame(frame); } });
-function adapt(dt) { acc += dt; frames++; if (acc < 1.5) return; const ms = (1000 * acc) / frames; acc = frames = 0; if (ms > 22 && dpr > 1) { dpr = Math.max(1, dpr - 0.25); renderer.setPixelRatio(dpr); renderer.setSize(innerWidth, innerHeight, false); } }
+function adapt(dt) { acc += dt; frames++; if (acc < 1.5) return; const ms = (1000 * acc) / frames; acc = frames = 0; if (ms > 22 && dpr > 1) { dpr = Math.max(1, dpr - 0.25); renderer.setPixelRatio(dpr); renderer.setSize(VW(), VH(), false); } }
 function frame(t) {
   if (!running) return;
   const dt = Math.min(0.05, (t - last) / 1000); last = t; now = t / 1000;
@@ -485,7 +487,7 @@ function frame(t) {
 }
 
 // ---------- boot ----------
-measure(); buildPath(); setPalette(0);
+resize(); setPalette(0);
 scene.environment = buildEnv();
 Promise.all([buildHero(), buildClouds()]).then(() => {
   document.documentElement.classList.add('ready'); requestAnimationFrame(frame);
