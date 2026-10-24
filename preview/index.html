@@ -8,12 +8,12 @@
 <meta name="description" content="NoGuilt Corporation imports Japanese and Korean collectibles and delivers them retail-ready to US chains. Factory-sealed trading cards, plush and character goods, in 10,000+ US stores.">
 <meta property="og:title" content="NoGuilt · From Tokyo and Seoul to 10,000+ US stores">
 <meta property="og:description" content="Import and distribution of Japanese and Korean collectibles for US retail.">
-<meta property="og:image" content="https://tcg.noguilt.us/img/city/tokyo-aerial.jpg">
+<meta property="og:image" content="https://tcg.noguilt.us/img/rp2/ultra-rare-front.webp">
 <meta name="theme-color" content="#8E9AD2">
 <link rel="icon" href="../img/email-logo.png">
 <script>document.documentElement.classList.replace('no-js','js');setTimeout(()=>document.documentElement.classList.add('ready'),2500)</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..400;1,9..144,300&family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..400;1,9..144,300&family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&family=Kanit:ital,wght@1,900&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="../img/cut/PP95.webp">
 <style>
 :root{--paper:#F4EFE6;--paper2:#EDE6DA;--ink:#1B1422;--muted:#665D70;--plum:#5A3D6E;--plumx:#22182C;--teal:#059691;--line:rgba(27,20,34,.14);
@@ -93,12 +93,8 @@ section.s{padding:clamp(100px,12vw,170px) 0}
 .nums b{display:block;font:300 clamp(48px,5.6vw,89px)/.95 var(--serif);letter-spacing:-.04em}
 .nums b.sm{font-size:clamp(26px,2.4vw,38px);line-height:1.15;letter-spacing:-.02em}
 .nums span{display:block;margin-top:16px;font-size:15px;color:#4A4054;max-width:230px}
-.chan{margin-top:clamp(70px,9vw,120px)}
-.chan .lbl{margin-bottom:18px}
-.chan ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
-.chan li{padding:24px 0;border-bottom:1px solid var(--line);font:300 clamp(24px,2.3vw,34px)/1.15 var(--serif);letter-spacing:-.015em}
-.chan li:not(:nth-child(3n+1)){padding-left:24px;border-left:1px solid var(--line)}
-.chan small{display:block;margin-top:6px;font:400 14px/1.4 var(--sans);color:var(--muted);letter-spacing:0}
+.chan{margin:clamp(40px,5vw,64px) 0 0;padding-top:22px;border-top:1px solid var(--line);font:300 clamp(20px,2vw,28px)/1.35 var(--serif);letter-spacing:-.01em;color:#3E3548;max-width:1100px}
+.chan span{display:block;font:500 13px/1 var(--sans);letter-spacing:.01em;color:var(--muted);margin-bottom:12px}
 /* marquee */
 .marq{border-block:1px solid var(--line);overflow:hidden;padding:26px 0}
 .marq .tr{display:flex;align-items:center;width:max-content;animation:deck 60s linear infinite}
@@ -150,16 +146,23 @@ section.s{padding:clamp(100px,12vw,170px) 0}
 .item p{margin:0;font-size:13.5px;color:var(--muted)}
 .more{display:flex;justify-content:center;margin-top:46px}
 .empty{display:none;text-align:center;padding:60px 0;font:300 28px var(--serif);color:var(--muted)}
-/* repacks teaser */
-#repacks{background:var(--plumx);color:var(--paper);overflow:clip}
-#repacks .lbl{color:rgba(244,239,230,.62)}#repacks .head p{color:rgba(244,239,230,.78)}
-.fan{position:relative;height:clamp(300px,38vw,500px);margin-top:10px}
-.fan img{position:absolute;left:50%;bottom:0;height:86%;width:auto;transform-origin:50% 130%;transform:translateX(-50%) rotate(calc((var(--i) - 4) * 6deg));transition:transform .7s var(--out);filter:drop-shadow(0 26px 30px rgba(0,0,0,.5))}
-.fan:hover img{transform:translateX(-50%) rotate(calc((var(--i) - 4) * 8.5deg))}
-.fan img:hover{transform:translateX(-50%) rotate(calc((var(--i) - 4) * 8.5deg)) translateY(-40px)}
-.tease{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;margin-top:clamp(70px,9vw,120px)}
-#repacks .btn{background:var(--paper);color:var(--ink)}#repacks .btn:hover{background:#D9CCEA}
-.tease span.lbl{display:inline}
+/* repacks band: same sky, after dark */
+#repacks{position:relative;overflow:clip;color:#fff;text-align:center;padding:clamp(90px,10vw,140px) 0 0;
+background:radial-gradient(60% 50% at 50% 70%,rgba(255,176,40,.3),transparent 70%),radial-gradient(90% 60% at 50% 0%,#2A2140,transparent 70%),#121017}
+.nrays{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.nrays::before{content:"";position:absolute;left:50%;top:70%;width:240vmax;height:240vmax;transform:translate(-50%,-50%);background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.05) 0deg 4deg,transparent 4deg 12deg);-webkit-mask:radial-gradient(closest-side,#000,transparent 70%);mask:radial-gradient(closest-side,#000,transparent 70%)}
+.rhead{position:relative;z-index:2}
+#repacks .lbl{color:rgba(255,255,255,.62)}
+.rlock{font:900 italic clamp(44px,7vw,100px)/.9 'Kanit',sans-serif;text-transform:uppercase;letter-spacing:-.01em;margin:16px 0 18px}
+.rlock em{font-style:inherit;color:#FFC23D}
+.rhead p{max-width:620px;margin:0 auto;color:rgba(255,255,255,.78)}
+.rshelf{position:relative;z-index:3;display:flex;align-items:flex-end;justify-content:center;gap:clamp(6px,1vw,14px);margin-top:clamp(40px,5vw,64px);padding:0 12px}
+.rshelf img{height:calc(clamp(140px,15vw,220px) * var(--h,1));width:auto;filter:drop-shadow(0 20px 22px rgba(0,0,0,.55));transition:transform .35s var(--out)}
+.rshelf img:hover{transform:translateY(-14px) rotate(-2deg)}
+.ndeck{position:relative;z-index:4;height:clamp(120px,14vw,200px);margin-top:calc(clamp(50px,6vw,90px) * -1)}
+.ndeck .strip{display:flex;width:max-content;height:100%;animation:deck 180s linear infinite}.ndeck img{height:100%;width:auto;max-width:none;flex:none}
+.rcta{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;padding:6px 0 clamp(70px,8vw,100px);background:#111016}
+.btn.gold{background:linear-gradient(180deg,#FFD25C,#F5A70E);color:#1A1206}.btn.gold:hover{background:linear-gradient(180deg,#FFDC7A,#F7B02A)}
 /* how we work */
 .flow{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:28px;padding-top:44px}
 .flow::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line)}
@@ -207,6 +210,7 @@ footer .legal{max-width:900px;line-height:1.6;font-size:13px;color:rgba(244,239,
 .js h2[data-r]{transform:translateY(28px)}
 @media (max-width:1020px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:860px){
+.rshelf{justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 18px 0;scrollbar-width:none}.rshelf img{height:calc(46vw * var(--h,1));scroll-snap-align:center}
 nav{position:fixed;inset:76px 0 auto;flex-direction:column;align-items:stretch;gap:0;background:var(--paper);padding:6px 20px 28px;box-shadow:0 30px 40px -20px rgba(27,20,34,.25);transform:translateY(-130%);transition:transform .45s var(--out)}
 nav.open{transform:none}nav a{font:300 24px/1 var(--serif);padding:16px 0;border-bottom:1px solid var(--line)}nav .btn{margin-top:18px;font:500 15px var(--sans);justify-content:center;height:52px}
 .menu{display:flex}
@@ -264,26 +268,11 @@ nav.open{transform:none}nav a{font:300 24px/1 var(--serif);padding:16px 0;border
 <div><b>5–7</b><span>business days from cleared payment to ship</span></div>
 <div><b class="sm">Tokyo · Kobe · Seoul → Miami</b><span>where we buy, and where every order ships from</span></div>
 </div>
-<div class="chan" data-r><span class="lbl">Retail channels we supply</span>
-<ul><li>Specialty &amp; pop culture<small>Collectibles, gifts and fandom stores</small></li><li>Grocery<small>Checkout and seasonal sets</small></li><li>Hardware &amp; home<small>Impulse and gift aisles</small></li>
-<li>Books &amp; hobby<small>Bookstores and hobby chains</small></li><li>Pharmacy &amp; convenience<small>Counter and front-end displays</small></li><li>Independent toy &amp; game<small>Local game and card shops</small></li></ul></div>
+<p class="chan" data-r><span>Retail channels we supply</span>Specialty &amp; pop culture · Grocery · Hardware &amp; home · Books &amp; hobby · Pharmacy &amp; convenience · Independent toy &amp; game</p>
 </div></section>
 
 <div class="marq" aria-label="Product lines"><div class="tr"><span>Pokémon TCG, Japanese</span><i></i><span>Pokémon TCG, Korean</span><i></i><span>One Piece Card Game</span><i></i><span>Dragon Ball Super</span><i></i><span>Yu-Gi-Oh! OCG</span><i></i><span>Pokémon plush</span><i></i><span>Kirby</span><i></i><span>Super Mario</span><i></i><span>Rilakkuma</span><i></i><span>The Legend of Zelda</span><i></i><span>NoGuilt Repacks</span><i></i><span>Pokémon TCG, Japanese</span><i></i><span>Pokémon TCG, Korean</span><i></i><span>One Piece Card Game</span><i></i><span>Dragon Ball Super</span><i></i><span>Yu-Gi-Oh! OCG</span><i></i><span>Pokémon plush</span><i></i><span>Kirby</span><i></i><span>Super Mario</span><i></i><span>Rilakkuma</span><i></i><span>The Legend of Zelda</span><i></i><span>NoGuilt Repacks</span><i></i></div></div>
 
-<section id="origins" aria-label="Origins">
-<div class="aerial"><img src="../img/city/tokyo-aerial.jpg" alt="Shibuya, Tokyo at night" loading="lazy" decoding="async">
-<div class="wrap"><span class="lbl" data-r>Origins</span><h2 data-r>Bought in Tokyo<br>and Seoul.</h2></div></div>
-<div class="wrap">
-<div class="pair">
-<figure data-r><div class="ph"><img src="../img/city/tokyo-street.jpg" alt="A Tokyo side street at night" loading="lazy" decoding="async"></div>
-<figcaption><b>Tokyo &amp; Kobe, Japan</b><span class="clock" data-tz="Asia/Tokyo" data-city="Tokyo">Tokyo</span><p>Japanese editions, plush and character goods, bought through our partners in Japan and flown to Miami.</p></figcaption></figure>
-<figure data-r><div class="ph"><img src="../img/city/seoul-street.jpg" alt="A Seoul street at night" loading="lazy" decoding="async"></div>
-<figcaption><b>Seoul, Korea</b><span class="clock" data-tz="Asia/Seoul" data-city="Seoul">Seoul</span><p>Korean editions, bought direct from distribution partners in Korea and flown to Miami.</p></figcaption></figure>
-</div>
-<div class="hq" data-r><span><b>Miami Gardens, Florida.</b> Every order is labeled, packed and shipped from our warehouse.</span><span class="clock" data-tz="America/New_York" data-city="Miami">Miami</span></div>
-</div>
-</section>
 
 <section class="s" id="catalog"><div class="wrap">
 <div class="head"><div><span class="lbl" data-r>Assortment</span><h2 data-r>Sealed product,<br>ready for retail.</h2></div>
@@ -294,12 +283,15 @@ nav.open{transform:none}nav a{font:300 24px/1 var(--serif);padding:16px 0;border
 <div class="more"><button class="btn" id="more">Show the full assortment <span class="ar"><span>→</span><span>→</span></span></button></div>
 </div></section>
 
-<section class="s" id="repacks"><div class="wrap">
-<div class="head"><div><span class="lbl" data-r>Our own line</span><h2 data-r>NoGuilt Repacks.</h2></div>
-<p data-r>Repack pouches of genuine Pokémon, baseball, basketball, football and soccer cards, packed and heat-sealed in Miami Gardens, Florida. Every pack prints its card count and guaranteed hit on the front.</p></div>
-<a class="fan" href="repacks.html" aria-label="Open the NoGuilt Repacks catalog" style="display:block"><img src="../img/rp2/baseball-front.webp" alt="" style="--i:0" loading="lazy" width="628" height="1200"><img src="../img/rp2/holo-front.webp" alt="" style="--i:1" loading="lazy" width="628" height="1200"><img src="../img/rp2/double-hit-front.webp" alt="" style="--i:2" loading="lazy" width="628" height="1200"><img src="../img/rp2/ultra-rare-front.webp" alt="" style="--i:3" loading="lazy" width="628" height="1200"><img src="../img/rp2/value-front.webp" alt="" style="--i:4" loading="lazy" width="628" height="1200"><img src="../img/rp2/mini-front.webp" alt="" style="--i:5" loading="lazy" width="628" height="1200"><img src="../img/rp2/soccer-front.webp" alt="" style="--i:6" loading="lazy" width="628" height="1200"><img src="../img/rp2/football-front.webp" alt="" style="--i:7" loading="lazy" width="628" height="1200"><img src="../img/rp2/basketball-front.webp" alt="" style="--i:8" loading="lazy" width="628" height="1200"></a>
-<div class="tease"><a class="btn" href="repacks.html">Open the Repacks catalog <span class="ar"><span>→</span><span>→</span></span></a><span class="lbl">Nine packs · Pokémon and sports · private label available</span></div>
-</div></section>
+<section id="repacks" aria-label="NoGuilt Repacks">
+<div class="nrays" aria-hidden="true"></div>
+<div class="wrap rhead"><span class="lbl" data-r>Our own line</span>
+<h2 class="rlock" data-r>NoGuilt <em>Repacks</em></h2>
+<p data-r>Nine repack pouches of genuine Pokémon, baseball, basketball, football and soccer cards, packed and heat-sealed in Miami Gardens, Florida. Every pack prints its guaranteed hit on the front.</p></div>
+<a class="rshelf" href="repacks.html" aria-label="Open the NoGuilt Repacks catalog"><img src="../img/rp2/mini-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"><img src="../img/rp2/holo-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"><img src="../img/rp2/double-hit-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"><img src="../img/rp2/ultra-rare-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"><img src="../img/rp2/value-front-360.webp" alt="" style="--h:1.117" loading="lazy" width="360" height="612"><img src="../img/rp2/baseball-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"><img src="../img/rp2/basketball-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"><img src="../img/rp2/football-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"><img src="../img/rp2/soccer-front-360.webp" alt="" style="--h:1" loading="lazy" width="360" height="688"></a>
+<div class="ndeck" aria-hidden="true"><div class="strip"><img src="../img/sky/night3.webp" alt="" loading="lazy"><img src="../img/sky/night3.webp" alt="" loading="lazy"></div></div>
+<div class="wrap rcta"><a class="btn gold" href="repacks.html">Open the Repacks catalog <span class="ar"><span>→</span><span>→</span></span></a><span class="lbl">Wholesale · private label available</span></div>
+</section>
 
 <section class="s" id="how"><div class="wrap">
 <div class="head"><div><span class="lbl" data-r>How we work</span><h2 data-r>Buyers can’t afford surprises.</h2></div>
@@ -363,7 +355,7 @@ mb.onclick=()=>{const o=nav.classList.toggle('open');mb.setAttribute('aria-expan
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{rootMargin:'0px 0px -10% 0px'});
 document.querySelectorAll('[data-r],.pair figure').forEach(el=>io.observe(el));
 // pause cloud drift offscreen
-document.querySelectorAll('.hero,#contact').forEach(s=>new IntersectionObserver(es=>es.forEach(x=>s.classList.toggle('paused',!x.isIntersecting))).observe(s));
+document.querySelectorAll('.hero,#contact,#repacks').forEach(s=>new IntersectionObserver(es=>es.forEach(x=>s.classList.toggle('paused',!x.isIntersecting))).observe(s));
 // clocks
 const ck=[...document.querySelectorAll('.clock')];const tickC=()=>ck.forEach(c=>{c.textContent=c.dataset.city+' · '+new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit',timeZone:c.dataset.tz}).format(new Date())});tickC();setInterval(tickC,30000);
 // hero: objects lean toward cursor
@@ -371,7 +363,7 @@ if(fine&&!rm){const objs=[...document.querySelectorAll('.obj img')];addEventList
 im.style.transform=`rotate(var(--r)) ${im.closest('[data-d=back]')?'scale(.9)':''} perspective(800px) rotateY(${dx*8}deg) rotateX(${-dy*8}deg) translateY(${-6*near}px)`})},{passive:true})}
 // catalog
 const items=[...document.querySelectorAll('.item')],q=document.querySelector('.search'),empty=document.querySelector('.empty'),more=document.getElementById('more');
-let f='all',all=false;const LIM=12;
+let f='all',all=false;const LIM=8;
 function apply(){const t=q.value.trim().toLowerCase();let k=0,v=0;const filt=f!=='all'||t;
 items.forEach(c=>{const ok=(f==='all'||c.dataset.b===f)&&(!t||c.dataset.q.includes(t));const show=ok&&(all||filt||k<LIM);if(ok)k++;
 if(show){c.style.display='';c.style.setProperty('--dl',(v%4)*90+'ms');v++;io.observe(c)}else c.style.display='none'});
