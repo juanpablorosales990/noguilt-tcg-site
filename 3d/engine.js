@@ -25,7 +25,7 @@ try {
   if (!renderer.capabilities.isWebGL2) throw new Error('webgl2');
 } catch (e) { document.documentElement.classList.add('nogl'); throw e; }
 const VW = () => canvas.clientWidth || innerWidth, VH = () => canvas.clientHeight || innerHeight;
-let dpr = Math.min(devicePixelRatio, COARSE ? 1.5 : 1.75);
+let dpr = Math.min(devicePixelRatio, COARSE ? 1.3 : 1.75);
 renderer.setPixelRatio(dpr);
 renderer.setSize(VW(), VH(), false);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -107,14 +107,14 @@ let cloudMesh, cloudData; const clouds = [];
 async function buildClouds() {
   const map = await new Promise((r) => new THREE.TextureLoader().load(NG.shared + (COARSE ? 'clouds-256.webp' : 'clouds-512.webp'), r));
   map.colorSpace = THREE.NoColorSpace; cloudU.uMap.value = map;
-  const scale = COARSE ? 0.62 : 1, total = DECKS.reduce((s, d) => s + Math.round(d.n * scale), 0) + 4 * (COARSE ? 5 : 8);
+  const scale = COARSE ? 0.5 : 1, total = DECKS.reduce((s, d) => s + Math.round(d.n * scale), 0) + 4 * (COARSE ? 3 : 7);
   const geo = new THREE.PlaneGeometry(1, 1);
   cloudData = new THREE.InstancedBufferAttribute(new Float32Array(total * 4), 4).setUsage(THREE.DynamicDrawUsage); geo.setAttribute('aData', cloudData);
   cloudMesh = new THREE.InstancedMesh(geo, new THREE.ShaderMaterial({ uniforms: { ...sky, ...cloudU }, vertexShader: cloudVS, fragmentShader: cloudFS, transparent: true, depthWrite: false, side: THREE.DoubleSide, toneMapped: false }), total);
   cloudMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cloudMesh.frustumCulled = false; cloudMesh.renderOrder = 1; scene.add(cloudMesh);
   const r = rng(11);
   for (const ay of [A.hero, A.line, A.extra, A.open]) {
-    for (let i = 0; i < (COARSE ? 5 : 8); i++) {
+    for (let i = 0; i < (COARSE ? 3 : 7); i++) {
       const side = i % 2 ? 1 : -1, h = 1.8 + r() * 1.6;
       clouds.push({ x: side * (2.2 + r() * 2.2), y: ay + (r() * 2 - 1) * 1.6 - 0.6, z: 1.2 + r() * 2.2, h, w: h * (2.0 + r() * 0.4) * side, tile: Math.floor(r() * 6), op: 0.32 + r() * 0.2, vx: 0, ph: r() * 6.28, depth: 0, near: true });
     }
@@ -218,8 +218,8 @@ async function buildHero() { H = await packWithCards(NG.hero); heroRoot.add(H.pk
 function updateHero(s, time) {
   if (!H) return; heroRoot.visible = s < 2.2; if (!heroRoot.visible) return;
   const e = clamp(s - 1), P = H.pk.root, idle = 1 - seg(e, 0, 0.12);
-  P.rotation.set(idle * ptr.sy * 0.06, idle * (Math.sin(time * 0.5) * 0.1 + ptr.sx * 0.12), idle * Math.sin(time * 0.37) * 0.025);
-  P.position.y = idle * Math.sin(time * 1.05) * 0.04;
+  P.rotation.set(idle * ptr.sy * 0.05, idle * (Math.sin(time * 0.4) * 0.07 + ptr.sx * 0.1), idle * Math.sin(time * 0.3) * 0.015);
+  P.position.y = idle * Math.sin(time * 0.8) * 0.03;
   const tf = easeOut(seg(e, 0.05, 0.18)); // top strip leaves
   H.pk.top.position.set(1.4 * tf, 2.0 * tf, 0.35 * tf); H.pk.top.rotation.set(0.5 * tf, -0.4 * tf, -1.0 * tf); H.pk.top.visible = tf < 0.999;
   const n = H.cards.length, allOut = 0.2 + 0.025 * (n - 1) + 0.18;
@@ -252,16 +252,15 @@ async function buildLine() {
   let idx = 0; const total = rows.length;
   for (let r = 0; r < total; r++) {
     const row = rows[r], n = row.length, y = ((total - 1) / 2 - r) * rowGap;
-    if (L.rails) {
-      const len = (n - 1) * gap + 0.9;
-      const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, len, 16), chrome); rail.rotation.z = Math.PI / 2; rail.position.set(0, y + 0.95 * sc * 1.0, 0); lineRoot.add(rail);
-      for (const e of [-1, 1]) { const cap = new THREE.Mesh(new THREE.SphereGeometry(0.048, 16, 12), chrome); cap.position.set((e * len) / 2, rail.position.y, 0); lineRoot.add(cap); }
-    }
     await Promise.all(row.map(async (id, k) => {
       const it = L.items[id]; const [f, b] = await Promise.all([tex(it.front), tex(it.back)]);
       const p = makePack(f, b, it.aspect, { lo: true }); p.root.scale.setScalar(sc * (it.scale || 1));
       const px = (k - (n - 1) / 2) * gap, pivot = new THREE.Group();
-      if (L.rails) { pivot.position.set(px, y + 0.95 * sc, 0); p.root.position.set(0, -(p.PH / 2 - 0.035 * p.PH) * sc * (it.scale || 1), 0); }
+      if (L.rails) {
+        pivot.position.set(px, y + 0.95 * sc, 0); p.root.position.set(0, -(p.PH / 2 - 0.035 * p.PH) * sc * (it.scale || 1), 0);
+        const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.3, 14), chrome); peg.rotation.x = Math.PI / 2 - 0.18; peg.position.set(px, y + 0.95 * sc + 0.035, -0.02); lineRoot.add(peg);
+        const tip = new THREE.Mesh(new THREE.SphereGeometry(0.024, 14, 10), chrome); tip.position.set(px, y + 0.95 * sc + 0.06, 0.13); lineRoot.add(tip);
+      }
       else pivot.position.set(px, y, 0);
       pivot.add(p.root); lineRoot.add(pivot);
       pivot.userData = { i: idx++, base: pivot.position.clone(), it, lift: 0 }; items.push(pivot);
@@ -274,9 +273,9 @@ function updateLine(s, time, dt) {
   items.forEach((p) => {
     const u = p.userData, k = easeOut(seg(w, 0.17 + u.i * 0.025, 0.36 + u.i * 0.025));
     u.lift = lerp(u.lift, picked === p ? 1 : 0, 1 - Math.pow(0.002, dt));
-    p.visible = k > 0.001;
-    p.position.set(u.base.x, u.base.y + (1 - k) * 1.2 + (NG.line.rails ? 0 : Math.sin(time * 0.9 + u.i) * 0.04) + u.lift * 0.12, u.base.z + u.lift * 0.35);
-    p.rotation.set(0, Math.sin(time * 0.6 + u.i * 2) * 0.06 + ptr.sx * 0.06 + u.lift * 0.1, (NG.line.rails ? Math.sin(time * 1.0 + u.i) * 0.02 : 0) + (1 - k) * 0.3 * Math.sin(u.i * 3));
+    p.visible = k > 0.001; p.scale.setScalar(0.9 + 0.1 * k);
+    p.position.set(u.base.x, u.base.y - (1 - k) * 0.25 + (NG.line.rails ? 0 : Math.sin(time * 0.7 + u.i) * 0.025) + u.lift * 0.1, u.base.z - (1 - k) * 0.6 + u.lift * 0.3);
+    p.rotation.set(0, Math.sin(time * 0.45 + u.i * 2) * 0.04 + ptr.sx * 0.05 + u.lift * 0.1, NG.line.rails ? Math.sin(time * 0.8 + u.i) * 0.012 : 0);
   });
 }
 function showDetail(p) {
@@ -290,6 +289,7 @@ const extraRoot = new THREE.Group(); extraRoot.position.y = A.extra; scene.add(e
 let PL = null, plFaces = [], trailMat = null, curve = null; const travellers = [];
 async function buildExtra() {
   const X = NG.extra;
+  try { await Promise.race([Promise.all([document.fonts.load('italic 300 100px Fraunces'), document.fonts.load('600 24px "Inter Tight"')]), new Promise((r) => setTimeout(r, 2500))]); } catch (e) {}
   if (X.type === 'private') {
     plFaces = X.faces.map((f) => privateFace(f));
     const back = await tex(X.back);
@@ -316,11 +316,11 @@ function privateFace(f) { // generated "your brand" pouch art
   x.fillStyle = 'rgba(255,255,255,.18)'; for (let i = 0; i < 1200; i += 14) x.fillRect(0, i, 630, 3); // crimp texture top/bottom
   x.fillStyle = g; x.fillRect(0, 70, 630, 1040);
   x.globalCompositeOperation = 'destination-out'; x.beginPath(); x.roundRect(255, 26, 120, 40, 20); x.fill(); x.globalCompositeOperation = 'source-over';
-  x.fillStyle = 'rgba(255,255,255,.9)'; x.font = 'italic 400 118px "Instrument Serif", Georgia, serif'; x.textAlign = 'center'; x.fillText(f.name, 315, 330);
+  x.fillStyle = 'rgba(255,255,255,.9)'; x.font = 'italic 400 104px "Fraunces", Georgia, serif'; x.textAlign = 'center'; x.fillText(f.name, 315, 330);
   x.font = '600 34px "Inter Tight", Arial, sans-serif'; x.fillText(f.tag, 315, 400);
   x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 6; x.beginPath(); x.roundRect(124, 520, 382, 531, 22); x.stroke();
-  x.font = '500 26px "JetBrains Mono", monospace'; x.fillText('YOUR ART · YOUR TIERS', 315, 800);
-  x.font = '500 22px "JetBrains Mono", monospace'; x.fillText('GENUINE CARDS · AGES 6+', 315, 1110);
+  x.font = '600 24px "Inter Tight", Arial, sans-serif'; x.fillText('YOUR ART · YOUR TIERS', 315, 800);
+  x.font = '600 20px "Inter Tight", Arial, sans-serif'; x.fillText('GENUINE CARDS · AGES 6+', 315, 1110);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 }
 function updateExtra(s, time) {
@@ -346,7 +346,7 @@ const openRoot = new THREE.Group(); openRoot.position.y = A.open; scene.add(open
 let O = null, opState = 0, opBusy = false; const opBlob = blob(1.5, 0.8); openRoot.add(opBlob);
 async function buildOpen() { O = await packWithCards(NG.hero); openRoot.add(O.pk.root); opBlob.position.set(0, -O.pk.PH * 0.5 - 0.8, 0); resetOpen(); }
 function resetOpen() {
-  opState = 0; const k = O.pk; k.top.position.set(0, 0, 0); k.top.rotation.set(0, 0, 0); k.top.visible = true; k.body.position.set(0, 0, 0); k.body.rotation.set(0, 0, 0); k.body.scale.setScalar(1);
+  opState = 0; const k = O.pk; k.top.position.set(0, 0, 0); k.top.rotation.set(0, 0, 0); k.top.visible = true; k.body.position.set(0, 0, 0); k.body.rotation.set(0, 0, 0); k.body.scale.setScalar(1); k.body.visible = true;
   O.cards.forEach((m) => { m.position.set(0, O.cy, m.userData.z0); m.rotation.set(0, 0, 0); m.scale.setScalar(NG.hero.cardScale); });
   $('#openhint').textContent = 'Tap the pack'; $('#again').hidden = true; $('#openbtn').hidden = false; $('#hitmsg').classList.remove('on');
 }
@@ -357,17 +357,18 @@ async function tapOpen() {
     await tween(0.45, (t) => { k.top.position.set(1.2 * t, 1.8 * t, 0.3 * t); k.top.rotation.set(0.5 * t, -0.4 * t, -1.0 * t); }, easeOut);
     k.top.visible = false;
     await Promise.all(O.cards.map((m, i) => tween(0.55, (t) => { m.position.y = O.cy + t * O.rise; const o = seg(t, 0.9, 1); m.position.z = m.userData.z0 * (1 - o) + o * (0.05 + (n - 1 - i) * 0.006); })));
-    tween(0.5, (t) => { k.body.position.set(0, -0.25 * t, -1.3 * t); k.body.scale.setScalar(1 - 0.25 * t); });
+    tween(0.6, (t) => { k.body.position.set(0, -0.6 * t, -1.6 * t); k.body.scale.setScalar(Math.max(0.001, 1 - t)); }).then(() => { k.body.visible = false; });
     opState = 1; $('#openhint').textContent = 'Tap to reveal';
   } else {
-    const i = opState - 1, m = O.cards[i], y0 = m.position.y, z0 = m.position.z;
+    const i = opState - 1, m = O.cards[i], p0 = m.position.clone(), r0 = m.rotation.clone(), s0 = m.scale.x;
+    const R = (MOB ? 0.82 : 1.15) * cs, a = lerp(-0.6, 0.6, i / (n - 1));
     if (i === n - 1) {
-      await tween(0.7, (t) => { m.position.set(0, lerp(y0, 0.1, t), lerp(z0, 1.0, t)); m.rotation.y = Math.sin(t * Math.PI) * 0.5; m.scale.setScalar(cs * lerp(1, 1.12, t)); });
+      await tween(0.7, (t) => { m.position.set(lerp(p0.x, 0, t), lerp(p0.y, 0.08, t), lerp(p0.z, 1.0, t)); m.rotation.set(0, Math.sin(t * Math.PI) * 0.45, 0); m.scale.setScalar(lerp(s0, cs * 1.1, t)); });
       $('#hitmsg').classList.add('on'); setTimeout(() => $('#hitmsg').classList.remove('on'), 2200); burst();
       $('#openhint').textContent = NG.hitHint; $('#again').hidden = false; $('#openbtn').hidden = true; opState = 99;
     } else {
-      const x = (-0.3 + i * 0.2) * cs;
-      await tween(0.42, (t) => { m.position.set(lerp(0, x, t), lerp(y0, (MOB ? 1.3 : 0.95) * cs, t) + Math.sin(t * Math.PI) * 0.15, lerp(z0, 0.3 + i * 0.02, t)); m.rotation.z = lerp(0, 0.045 - i * 0.03, t); m.scale.setScalar(cs * lerp(1, 0.42, t)); });
+      const fx = Math.sin(a) * R * 1.25, fy = 0.15 + Math.cos(a) * 0.3 - 0.3, fz = 0.45 - Math.abs(a) * 0.4 + i * 0.004;
+      await tween(0.55, (t) => { m.position.set(lerp(p0.x, fx, t), lerp(p0.y, fy, t) + Math.sin(t * Math.PI) * 0.12, lerp(p0.z, fz, t)); m.rotation.set(0, lerp(r0.y, -a * 0.5, t), lerp(r0.z, -a * 0.3, t)); m.scale.setScalar(lerp(s0, cs, t)); });
       opState++; if (opState === n) $('#openhint').textContent = 'The last card';
     }
   }
@@ -431,7 +432,7 @@ function camAt(s) {
 // ---------- scroll -> story, sticky copy steps ----------
 const secs = $$('[data-s]'); let tops = [];
 function measure() { tops = secs.map((e) => ({ top: e.offsetTop, h: e.offsetHeight })); }
-function storyTarget() { const y = scrollY + innerHeight * 0.5; for (let k = secs.length - 1; k >= 0; k--) if (y >= tops[k].top) return k + clamp((y - tops[k].top) / Math.max(1, tops[k].h)); return 0; }
+function storyTarget() { const y = scrollY + VH() * 0.5; for (let k = secs.length - 1; k >= 0; k--) if (y >= tops[k].top) return k + clamp((y - tops[k].top) / Math.max(1, tops[k].h)); return 0; }
 function steps(s) { const act = Math.floor(s); secs.forEach((sec, k) => { const sk = sec.querySelector('.stick'); if (sk) sk.classList.toggle('act', k === act); const st = sec.querySelectorAll('.step'); if (st.length < 2) return; const p = clamp(s - k), i = Math.min(st.length - 1, Math.floor(p * st.length * 0.999)); st.forEach((e, j) => e.classList.toggle('on', j === i)); }); }
 let sNow = 0;
 
@@ -459,11 +460,11 @@ function resize() {
 }
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 120); });
 document.addEventListener('visibilitychange', () => { running = !document.hidden; if (running) { last = performance.now(); requestAnimationFrame(frame); } });
-function adapt(dt) { acc += dt; frames++; if (acc < 1.5) return; const ms = (1000 * acc) / frames; acc = frames = 0; if (ms > 22 && dpr > 1) { dpr = Math.max(1, dpr - 0.25); renderer.setPixelRatio(dpr); renderer.setSize(VW(), VH(), false); } }
+function adapt(dt) { acc += dt; frames++; if (acc < 0.75) return; const ms = (1000 * acc) / frames; acc = frames = 0; if (ms > 19 && dpr > 1) { dpr = Math.max(1, dpr - 0.15); renderer.setPixelRatio(dpr); renderer.setSize(VW(), VH(), false); } }
 function frame(t) {
   if (!running) return;
   const dt = Math.min(0.05, (t - last) / 1000); last = t; now = t / 1000;
-  const target = storyTarget(); sNow += (target - sNow) * (1 - Math.exp(-dt * (REDUCE ? 30 : 6.5))); if (Math.abs(target - sNow) < 1e-4) sNow = target;
+  const target = storyTarget(); sNow += (target - sNow) * (1 - Math.exp(-dt * (REDUCE ? 30 : 8))); if (Math.abs(target - sNow) < 1e-4) sNow = target;
   ptr.sx += (ptr.x - ptr.sx) * (1 - Math.exp(-dt * 3)); ptr.sy += (ptr.y - ptr.sy) * (1 - Math.exp(-dt * 3));
   runTweens(); steps(target);
   const time = REDUCE ? 0 : now;
