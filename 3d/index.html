@@ -1,0 +1,145 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NoGuilt 3D</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="NoGuilt Repacks: real Pokémon and sports cards in sealed packs, plus Japanese and Korean booster boxes, shipped from Miami.">
+<meta name="theme-color" content="#A7A3E6">
+<link rel="icon" href="../img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
+<style>
+:root{--ink:#17132E;--ink2:#4a4466;--paper:#FBF8F4;--accent:#FF5B3A;--lilac:#A7A3E6;--peach:#F7D9C9}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{background:linear-gradient(180deg,#4A4FA6,#A7A3E6 45%,#F7D9C9)}
+body{margin:0;color:var(--ink);font:16px/1.5 'Inter Tight',Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;background:transparent}
+#gl{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;display:block;z-index:0;touch-action:pan-y}
+.grain{position:fixed;inset:-50%;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:gr 1.2s steps(4) infinite}
+@keyframes gr{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 60%,rgba(40,30,80,.18) 100%)}
+header{position:fixed;inset:0 0 auto;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(16px,4vw,48px)}
+header img{height:34px;display:block;filter:brightness(0) saturate(100%) invert(9%) sepia(22%) saturate(2400%) hue-rotate(225deg)}
+header nav{display:flex;gap:24px;align-items:center}
+header nav a{color:var(--ink);text-decoration:none;font-weight:500;font-size:15px}
+header nav a.cta{background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px}
+main{position:relative;z-index:2;pointer-events:none}
+main a,main button,main .pe{pointer-events:auto}
+.wrap{padding:0 clamp(16px,6vw,96px);max-width:1440px;margin:0 auto}
+.screen{min-height:100vh;min-height:100svh;display:flex;align-items:center}
+.copy{max-width:470px}
+.label{font:500 12px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:0 0 18px}
+h1,h2{font-family:'Instrument Serif',Georgia,serif;font-weight:400;letter-spacing:-.02em;line-height:.95;margin:0}
+h1{font-size:clamp(56px,8vw,124px)}h2{font-size:clamp(44px,5.6vw,88px)}
+h1 em,h2 em{font-style:italic;color:#4B3FA8}
+.copy p{color:var(--ink2);font-size:clamp(16px,1.3vw,19px);margin:20px 0 0;max-width:420px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font:600 15px 'Inter Tight',Arial,sans-serif;text-decoration:none;padding:14px 24px;border-radius:999px;border:0;cursor:pointer;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.btn:hover{transform:translateY(-2px)}
+.btn.acc{background:var(--accent)}
+.btn.ghost{background:rgba(255,255,255,.35);color:var(--ink);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.copy .big{font:400 clamp(110px,15vw,220px)/.8 'Instrument Serif',Georgia,serif;color:#4B3FA8;margin:0 0 4px}
+.stats{display:flex;gap:clamp(18px,4vw,44px);margin-top:28px;flex-wrap:wrap}
+.stats b{display:block;font:400 clamp(40px,4.4vw,64px)/1 'Instrument Serif',Georgia,serif}
+.stats span{font:500 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.hint{font:500 12px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin-top:22px}
+.link{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:2px}
+#plabel{position:fixed;left:0;top:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .2s;text-align:center;white-space:nowrap}
+#plabel.on{opacity:1}
+#plabel b{display:block;font:400 26px/1 'Instrument Serif',Georgia,serif;color:var(--ink)}
+#plabel span{font:500 11px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.city{position:fixed;left:0;top:0;z-index:4;pointer-events:none;font:500 12px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:rgba(255,255,255,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px 10px;border-radius:999px;opacity:0;transition:opacity .4s;white-space:nowrap}
+.city.on{opacity:1}
+html:not(.atroute) .city{opacity:0!important}
+.openui{position:fixed;left:var(--ox,50%);bottom:max(28px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;display:flex;gap:10px;align-items:center;opacity:0;pointer-events:none;transition:opacity .4s}
+html.atopen .openui{opacity:1;pointer-events:auto}
+#openhint{font:500 12px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:13px 18px;border-radius:999px}
+#hitmsg{position:fixed;left:var(--ox,50%);top:12vh;transform:translate(-50%,10px);z-index:5;font:400 italic clamp(54px,8vw,120px)/1 'Instrument Serif',Georgia,serif;color:#4B3FA8;opacity:0;transition:.6s cubic-bezier(.2,.8,.2,1);pointer-events:none;text-shadow:0 4px 40px rgba(74,79,166,.45);white-space:nowrap}
+#hitmsg.on{opacity:1;transform:translate(-50%,0)}
+#contact{padding:20vh 0 8vh}
+#contact .card{pointer-events:auto;max-width:640px;background:rgba(251,248,244,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:28px;padding:clamp(28px,4vw,48px);box-shadow:0 30px 80px rgba(46,42,110,.18)}
+#contact .card p{color:var(--ink2)}
+footer{position:relative;z-index:2;color:var(--ink2);font-size:13px;padding:24px 0 40px}
+footer .row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+footer a{color:var(--ink2)}footer .links{display:flex;gap:18px;flex-wrap:wrap}
+.loader{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:linear-gradient(180deg,#4A4FA6,#A7A3E6 45%,#F7D9C9);transition:opacity .9s .1s}
+html.ready .loader{opacity:0;pointer-events:none}
+.loader i{display:block;width:120px;height:2px;background:rgba(255,255,255,.35);overflow:hidden;position:relative}
+.loader i:after{content:'';position:absolute;inset:0;background:#fff;transform-origin:left;animation:ld 1.4s ease-in-out infinite}
+@keyframes ld{0%{transform:scaleX(0)}60%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:0}}
+.static{display:none}
+html.nogl #gl,html.nogl .loader,html.nogl .openui{display:none}
+html.nogl .static{display:block;width:min(300px,70vw);margin:30px auto 0}
+@media (min-width:761px){.openui,#hitmsg{--ox:64%}}
+@media (max-width:760px){
+ header nav a:not(.cta){display:none}
+ .screen{align-items:flex-start!important;padding-top:14vh}
+ h1{font-size:clamp(52px,15vw,76px)}h2{font-size:clamp(42px,12vw,60px)}
+ .copy p{max-width:none}
+ .copy h1,.copy h2,.copy p,.copy .label,.big{text-shadow:0 0 18px rgba(251,248,244,.85),0 0 4px rgba(251,248,244,.6)}
+ #lineup .screen,#route .screen{padding-top:12vh}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style></head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vig"></div><div class="grain"></div>
+<div class="loader"><i></i></div>
+<header><a href="../index.html" aria-label="NoGuilt home"><img src="../img/logo.png" alt="NoGuilt"></a>
+<nav><a href="../index.html#catalog">Catalog</a><a href="../repacks.html">Repacks</a><a class="cta" href="#contact">Wholesale</a></nav></header>
+
+<main>
+<section id="hero" data-s><div class="wrap screen"><div class="copy">
+ <p class="label">NoGuilt Repacks · Miami</p>
+ <h1>Real cards.<br><em>No guilt.</em></h1>
+ <p>Sealed packs of genuine Pokémon and sports cards, plus Japanese and Korean booster boxes, shipped from Miami.</p>
+ <div class="btns"><a class="btn" href="#explode">Open the pack</a><a class="btn ghost" href="#contact">Wholesale</a></div>
+ <img class="static" src="../img/rp2/double-hit-front.webp" alt="NoGuilt Double Hit pack">
+</div></div></section>
+
+<section id="explode" data-s style="height:340vh">
+ <div class="wrap screen"><div class="copy"><p class="label">01 · The tear</p><h2>Every pouch.<br><em>Real cards inside.</em></h2><p>Genuine cards, sealed in Miami. No filler, no empty promises.</p></div></div>
+ <div class="wrap screen"><div class="copy"><p class="big" id="count">0</p><h2>cards. <em>Two hits.</em></h2><p>Every Double Hit has 1 ultra rare and 1 holo. The other 3 round out the pack.</p></div></div>
+ <div class="wrap screen"><div class="copy"><p class="label">The hit</p><h2>This is why<br><em>they come back.</em></h2><p>An ultra rare can be an ex, V or full-art card like this one. Move your cursor to catch the foil.</p></div></div>
+</section>
+
+<section id="lineup" data-s style="height:240vh">
+ <div class="wrap screen"><div class="copy"><p class="label">02 · The lineup</p><h2>Nine packs.<br><em>Pick your rip.</em></h2><p>Five Pokémon packs and four sports packs, each with its own guarantee.</p><p class="hint">Hover or tap a pack</p></div></div>
+ <div class="wrap screen"><div class="copy"><a class="link" href="../repacks.html">See all nine packs →</a></div></div>
+</section>
+
+<section id="route" data-s style="height:240vh">
+ <div class="wrap screen"><div class="copy"><p class="label">03 · The route</p><h2>Sealed in Japan & Korea.<br><em>Landed in Miami.</em></h2><p>We import direct and ship sealed boxes from Miami to retail across the US.</p><p class="hint"><a class="link" href="../index.html#catalog">See all 88 sealed imports →</a></p></div></div>
+ <div class="wrap screen"><div class="copy"><h2><em id="stores">0</em><br>stores.</h2><div class="stats"><div><b>88</b><span>SKUs in stock</span></div><div><b>5–7</b><span>days to ship</span></div><div><b>100%</b><span>factory sealed</span></div></div></div></div>
+</section>
+
+<section id="open" data-s style="height:170vh">
+ <div class="wrap screen" style="position:sticky;top:0"><div class="copy"><p class="label">04 · Your turn</p><h2>Open<br><em>a pack.</em></h2><p>Tap the pack, then tap to reveal each card.</p></div></div>
+</section>
+
+<section id="contact" data-s><div class="wrap"><div class="card">
+ <p class="label">Wholesale</p><h2>Become a<br><em style="color:var(--accent);text-shadow:none">stockist.</em></h2>
+ <p>Retailers, distributors and chains: tell us your store count and the lines you want. We reply with the catalog, UPCs, case packs and terms.</p>
+ <div class="btns"><a class="btn acc" href="mailto:info@noguilt.us?subject=NoGuilt%20wholesale%20catalog">Request the catalog</a><a class="btn ghost" href="../repacks.html">See the repacks</a></div>
+</div></div></section>
+</main>
+
+<div id="plabel"><b></b><span></span></div>
+<div class="city" data-at="0.08">Tokyo · Kobe · Seoul</div>
+<div class="city" data-at="0.52">Miami</div>
+<div class="city" data-at="0.96">Your shelf</div>
+<div class="openui"><span id="openhint">Tap the pack</span><button class="btn" id="openbtn">Open</button><button class="btn acc" id="again" hidden>Open another</button></div>
+<div id="hitmsg">Double Hit.</div>
+
+<footer><div class="wrap">
+ <div class="row"><span>© 2026 NoGuilt Corporation · Miami, Florida · <a href="mailto:info@noguilt.us">info@noguilt.us</a></span>
+ <span class="links"><a href="../index.html">Catalog</a><a href="../repacks.html">Repacks</a><a href="../buy.html">Sell my bulk cards</a></span></div>
+ <p>NoGuilt repacks contain genuine Pokémon TCG and sports cards repackaged by NoGuilt Corporation. Not an official Pokémon product. Not produced, sponsored or endorsed by Nintendo, Creatures, GAME FREAK or The Pokémon Company. Pokémon and all related names are trademarks of their respective owners.</p>
+</div></footer>
+<script>
+(function(){var o=document.getElementById('open'),c=document.getElementById('contact'),r=document.getElementById('route');
+function f(){var a=o.getBoundingClientRect(),q=c.getBoundingClientRect(),b=r.getBoundingClientRect(),h=innerHeight,d=document.documentElement;
+d.classList.toggle('atopen',a.top<h*.3&&q.top>h*.9);d.classList.toggle('atroute',b.top<h*.5&&b.bottom>h*.5)}
+addEventListener('scroll',f,{passive:true});f();setTimeout(function(){document.documentElement.classList.add('ready')},7000);})();
+</script>
+<script type="module" src="main.js"></script>
+</body></html>
