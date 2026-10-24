@@ -396,7 +396,7 @@ async function tapOpen() {
   } else {
     const i = opState - 1, m = opCards[i], slot = i, y0 = m.position.y, z0 = m.position.z;
     if (i === 4) {
-      await tween(0.9, (k) => { m.position.set(0, lerp(y0, 0.75, k), lerp(z0, 1.1, k)); m.rotation.y = Math.sin(k * Math.PI) * 0.6; m.scale.setScalar(lerp(1, 1.15, k)); });
+      await tween(0.9, (k) => { m.position.set(0, lerp(y0, 0.15, k), lerp(z0, 1.3, k)); m.rotation.y = Math.sin(k * Math.PI) * 0.6; m.scale.setScalar(lerp(1, 1.15, k)); });
       $('#hitmsg').classList.add('on'); burst(); $('#openhint').textContent = 'Double Hit.'; $('#again').hidden = false; $('#openbtn').hidden = true; opState = 6;
     } else {
       const x = (MOB ? -0.32 : -1.45) + slot * (MOB ? 0.16 : 0.34);
@@ -408,7 +408,7 @@ async function tapOpen() {
 }
 const sparks = (() => { const n = 200, g = new THREE.BufferGeometry(), p = new Float32Array(n * 3), v = new Float32Array(n * 3); g.setAttribute('position', new THREE.BufferAttribute(p, 3));
   const m = new THREE.PointsMaterial({ size: 0.05, color: 0xffd36b, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }); openRoot.add(new THREE.Points(g, m)); return { g, p, v, m, n, t: 9 }; })();
-function burst() { for (let i = 0; i < sparks.n; i++) { sparks.p.set([0, 0.75, 1.1], i * 3); const d = new THREE.Vector3().randomDirection().multiplyScalar(1.2 + Math.random() * 2); sparks.v.set([d.x, d.y, d.z * 0.5], i * 3); } sparks.t = 0; sparks.m.opacity = 1; }
+function burst() { for (let i = 0; i < sparks.n; i++) { sparks.p.set([0, 0.15, 1.3], i * 3); const d = new THREE.Vector3().randomDirection().multiplyScalar(1.2 + Math.random() * 2); sparks.v.set([d.x, d.y, d.z * 0.5], i * 3); } sparks.t = 0; sparks.m.opacity = 1; }
 function updateOpen(s, time, dt) {
   openRoot.visible = s > 3.95; if (!op || !openRoot.visible) return;
   if (opState === 0) { op.root.rotation.y = Math.sin(time * 0.6) * 0.12 + ptr.sx * 0.2; op.root.position.y = Math.sin(time * 1.05) * 0.045; } else op.root.rotation.y *= 0.92;
