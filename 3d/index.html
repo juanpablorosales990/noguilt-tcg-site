@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>NoGuilt 3D</title>
+<title>NoGuilt Repacks</title>
 <meta name="robots" content="noindex">
-<meta name="description" content="NoGuilt Repacks: real Pokémon and sports cards in sealed packs, plus Japanese and Korean booster boxes, shipped from Miami.">
+<meta name="description" content="NoGuilt Repacks: sealed packs of genuine Pokémon and sports cards with guaranteed hits, packed in the USA.">
 <meta name="theme-color" content="#A7A3E6">
 <link rel="icon" href="../img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,6 +55,7 @@ html.atopen .openui{opacity:1;pointer-events:auto}
 #openhint{font:500 12px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:13px 18px;border-radius:999px}
 #hitmsg{position:fixed;left:var(--ox,50%);top:max(76px,7vh);transform:translate(-50%,10px);z-index:5;font:400 italic clamp(54px,8vw,120px)/1 'Instrument Serif',Georgia,serif;color:#4B3FA8;opacity:0;transition:.6s cubic-bezier(.2,.8,.2,1);pointer-events:none;text-shadow:0 4px 40px rgba(74,79,166,.45);white-space:nowrap}
 #hitmsg.on{opacity:1;transform:translate(-50%,0)}
+html:not(.atopen) #hitmsg{opacity:0!important}
 #contact{padding:20vh 0 8vh}
 #contact .card{pointer-events:auto;max-width:640px;background:rgba(251,248,244,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:28px;padding:clamp(28px,4vw,48px);box-shadow:0 30px 80px rgba(46,42,110,.18)}
 #contact .card p{color:var(--ink2)}
@@ -91,13 +92,13 @@ html.nogl .static{display:block;width:min(300px,70vw);margin:30px auto 0}
 <section id="hero" data-s><div class="wrap screen"><div class="copy">
  <p class="label">NoGuilt Repacks · Miami</p>
  <h1>Real cards.<br><em>No guilt.</em></h1>
- <p>Sealed packs of genuine Pokémon and sports cards, plus Japanese and Korean booster boxes, shipped from Miami.</p>
+ <p>Sealed packs of genuine Pokémon and sports cards. Guaranteed hits, packed in the USA.</p>
  <div class="btns"><a class="btn" href="#explode">Open the pack</a><a class="btn ghost" href="#contact">Wholesale</a></div>
  <img class="static" src="../img/rp2/double-hit-front.webp" alt="NoGuilt Double Hit pack">
 </div></div></section>
 
 <section id="explode" data-s style="height:340vh">
- <div class="wrap screen"><div class="copy"><p class="label">01 · The tear</p><h2>Every pouch.<br><em>Real cards inside.</em></h2><p>Genuine cards, sealed in Miami. No filler, no empty promises.</p></div></div>
+ <div class="wrap screen"><div class="copy"><p class="label">01 · The tear</p><h2>Every pouch.<br><em>Real cards inside.</em></h2><p>Genuine cards, sealed in the USA. No filler, no empty promises.</p></div></div>
  <div class="wrap screen"><div class="copy"><p class="big" id="count">0</p><h2>cards. <em>Two hits.</em></h2><p>Every Double Hit has 1 ultra rare and 1 holo. The other 3 round out the pack.</p></div></div>
  <div class="wrap screen"><div class="copy"><p class="label">The hit</p><h2>This is why<br><em>they come back.</em></h2><p>An ultra rare can be an ex, V or full-art card like this one. Move your cursor to catch the foil.</p></div></div>
 </section>
@@ -108,8 +109,8 @@ html.nogl .static{display:block;width:min(300px,70vw);margin:30px auto 0}
 </section>
 
 <section id="route" data-s style="height:240vh">
- <div class="wrap screen"><div class="copy"><p class="label">03 · The route</p><h2>Sealed in Japan & Korea.<br><em>Landed in Miami.</em></h2><p>We import direct and ship sealed boxes from Miami to retail across the US.</p><p class="hint"><a class="link" href="../index.html#catalog">See all 88 sealed imports →</a></p></div></div>
- <div class="wrap screen"><div class="copy"><h2><em id="stores">0</em><br>stores.</h2><div class="stats"><div><b>88</b><span>SKUs in stock</span></div><div><b>5–7</b><span>days to ship</span></div><div><b>100%</b><span>factory sealed</span></div></div></div></div>
+ <div class="wrap screen"><div class="copy"><p class="label">03 · On the shelf</p><h2>Made to hang.<br><em>Ready to sell.</em></h2><p>Every pack has a hang hole, a UPC and its guarantee printed on the front. Sold in case packs to retailers, distributors and chains.</p></div></div>
+ <div class="wrap screen"><div class="copy"><div class="stats"><div><b>9</b><span>packs</span></div><div><b>2</b><span>lines: Pokémon + sports</span></div><div><b>6+</b><span>ages</span></div></div><p class="hint"><a class="link" href="../repacks.html">Case packs and specs →</a></p></div></div>
 </section>
 
 <section id="open" data-s style="height:170vh">
@@ -124,9 +125,6 @@ html.nogl .static{display:block;width:min(300px,70vw);margin:30px auto 0}
 </main>
 
 <div id="plabel"><b></b><span></span></div>
-<div class="city" data-at="0.08">Tokyo · Kobe · Seoul</div>
-<div class="city" data-at="0.52">Miami</div>
-<div class="city" data-at="0.96">Your shelf</div>
 <div class="openui"><span id="openhint">Tap the pack</span><button class="btn" id="openbtn">Open</button><button class="btn acc" id="again" hidden>Open another</button></div>
 <div id="hitmsg">Double Hit.</div>
 

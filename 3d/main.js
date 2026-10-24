@@ -235,11 +235,11 @@ addEventListener('pointermove', (e) => { ptr.x = (e.clientX / innerWidth) * 2 - 
 const CARDS = [{ t: 'c-charmander', k: 0 }, { t: 'c-squirtle', k: 0 }, { t: 'c-bulbasaur', k: 0 }, { t: 'c-charizard-ex', k: 1 }, { t: 'c-charizard-sir', k: 2 }];
 const STACKZ = [0.006, 0.0, -0.006, 0.012, -0.012];
 const heroRoot = new THREE.Group(); heroRoot.position.y = A.hero; scene.add(heroRoot);
-let hero = null; const heroCards = []; const heroBlob = blob(1.5, 0.8); heroBlob.position.set(0, -1.75, 0); heroRoot.add(heroBlob);
+let hero = null; const heroCards = []; const heroCardsG = new THREE.Group(); heroRoot.add(heroCardsG); const heroBlob = blob(1.5, 0.8); heroBlob.position.set(0, -1.75, 0); heroRoot.add(heroBlob);
 async function buildHero() {
   const [f, b, back, ...fr] = await Promise.all([tex(TEX + 'dh-front.webp'), tex(TEX + 'dh-back.webp'), tex(TEX + 'c-back.webp'), ...CARDS.map((c) => tex(TEX + c.t + '.webp'))]);
   hero = makePouch(f, b, { window: true }); heroRoot.add(hero.root);
-  CARDS.forEach((c, i) => { const m = makeCard(fr[i], back, c.k); m.position.set(0, CARD_Y0, STACKZ[i]); heroRoot.add(m); heroCards.push(m); });
+  CARDS.forEach((c, i) => { const m = makeCard(fr[i], back, c.k); m.position.set(0, CARD_Y0, STACKZ[i]); heroCardsG.add(m); heroCards.push(m); });
 }
 function updateHero(s, time) {
   if (!hero) return;
@@ -255,11 +255,15 @@ function updateHero(s, time) {
   hero.top.rotation.set(tf * 0.5, -tf * 0.4, -tf * 1.0 + Math.sin(time * 45) * 0.02 * shake); hero.top.visible = tf < 0.999;
   const fan = ease(seg(e, 0.44, 0.62)), hit = ease(seg(e, 0.64, 0.8));
   hero.body.position.set(0, -fan * 2.4, -fan * 1.4); hero.body.rotation.x = -fan * 0.4;
+  const follow = 1 - fan;
+  heroCardsG.position.set(0, P.position.y * follow, 0);
+  heroCardsG.rotation.set(P.rotation.x * follow, P.rotation.y * follow, P.rotation.z * follow);
   const R = MOB ? 0.95 : 1.35;
   heroCards.forEach((c, k) => {
     const rise = ease(seg(e, 0.22 + k * 0.03, 0.4 + k * 0.03)), a = lerp(-0.62, 0.62, k / 4);
     const fx = Math.sin(a) * R * 1.25, fy = 0.3 + Math.cos(a) * 0.32 - 0.32, fz = 0.55 - Math.abs(a) * 0.5 + k * 0.002;
-    let x = lerp(0, fx, fan), y = lerp(CARD_Y0 + rise * PH * 0.82, fy, fan), z = lerp(STACKZ[k] * (1 - rise) + rise * 0.02 * k, fz, fan);
+    const out = seg(rise, 0.92, 1);
+    let x = lerp(0, fx, fan), y = lerp(CARD_Y0 + rise * PH * 0.82, fy, fan), z = lerp(STACKZ[k] * (1 - out) + out * 0.02 * k, fz, fan);
     let ry = lerp(0, -a * 0.55, fan), rz = lerp(0, -a * 0.32, fan), sc = lerp(1, 1.06, fan);
     if (k === 4) { x = lerp(x, 0, hit); y = lerp(y, 0.12, hit); z = lerp(z, MOB ? 1.0 : 1.3, hit); sc = lerp(sc, 1.16, hit); ry = lerp(ry, ptr.sx * 0.45 + Math.sin(time * 0.7) * 0.2, hit); rz = lerp(rz, 0, hit); }
     else { z -= hit * 0.5; y -= hit * 0.05; }
@@ -315,69 +319,48 @@ function setHover(p) {
   else { lab.classList.remove('on'); canvas.style.cursor = ''; }
 }
 
-// ---------- scene 4: the route (contrail) ----------
+// ---------- scene 4: on the shelf (peg hooks) ----------
 const routeRoot = new THREE.Group(); routeRoot.position.y = A.route; scene.add(routeRoot);
-let trail = null, trailMat = null;
-function buildRoute() {
-  const W = MOB ? 3.0 : 7.5; const pts = [new THREE.Vector3(-W, -1.4, -9), new THREE.Vector3(-W * 0.45, 1.3, -6), new THREE.Vector3(W * 0.1, 2.0, -5), new THREE.Vector3(W * 0.6, 1.0, -6), new THREE.Vector3(W, -1.2, -9)];
-  const curve = new THREE.CatmullRomCurve3(pts);
-  const geo = new THREE.TubeGeometry(curve, 240, 0.045, 10, false);
-  trailMat = new THREE.ShaderMaterial({
-    transparent: true, depthWrite: false, toneMapped: false, uniforms: { uP: { value: 0 }, uT: { value: 0 } },
-    vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
-    fragmentShader: `uniform float uP; uniform float uT; varying vec2 vUv;
-      void main(){ float head=smoothstep(uP,uP-0.02,vUv.x); float tail=smoothstep(0.0,0.08,vUv.x);
-        float shimmer=0.85+0.15*sin(vUv.x*60.0-uT*3.0);
-        vec3 c=mix(vec3(1.0,0.55,0.85),vec3(1.0,0.86,0.45),vUv.x);
-        gl_FragColor=vec4(mix(c,vec3(1.0),0.15)*shimmer*1.15,head*tail);
-#include <colorspace_fragment>
-}`,
-  });
-  trail = new THREE.Mesh(geo, trailMat); routeRoot.add(trail);
-  const glow = new THREE.Mesh(new THREE.TubeGeometry(curve, 160, 0.22, 12, false), new THREE.ShaderMaterial({
-    transparent: true, depthWrite: false, toneMapped: false, uniforms: trailMat.uniforms,
-    vertexShader: 'varying vec2 vUv; varying vec3 vN; void main(){ vUv=uv; vN=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
-    fragmentShader: `uniform float uP; varying vec2 vUv; varying vec3 vN; void main(){ float head=smoothstep(uP,uP-0.03,vUv.x)*smoothstep(0.0,0.08,vUv.x);
-      float f=pow(abs(vN.z),2.0); gl_FragColor=vec4(1.0,0.86,0.92,head*f*0.45);
-#include <colorspace_fragment>
-}`,
-  }));
-  routeRoot.add(glow);
-  routeRoot.userData.curve = curve;
-  Promise.all(['double-hit', 'holo', 'soccer', 'ultra-rare', 'basketball'].map((d) => Promise.all([tex(`${TEX}p-${d}-front.webp`), tex(`${TEX}p-${d}-back.webp`)]))).then((ts) => {
-    ts.forEach(([f, b], i) => { const p = makePouch(f, b, { lo: true }); p.root.scale.setScalar(0.5); p.root.userData.off = i / ts.length; routeRoot.add(p.root); travellers.push(p.root); });
-  });
+const hung = []; let shelfBuilt = false;
+async function buildRoute() {
+  if (shelfBuilt) return; shelfBuilt = true;
+  const rows = [['double-hit', 'holo', 'ultra-rare', 'mini', 'value'], ['soccer', 'baseball', 'basketball', 'football']];
+  const sc = MOB ? 0.52 : 0.7, gap = MOB ? 0.66 : 0.92, rowY = MOB ? [1.15, -1.25] : [1.2, -1.35];
+  const chrome = new THREE.MeshPhysicalMaterial({ color: 0xf2f0f7, metalness: 1, roughness: 0.16, clearcoat: 1 });
+  let i = 0;
+  for (let r = 0; r < 2; r++) {
+    const n = rows[r].length, len = (n - 1) * gap + 0.9, y = rowY[r];
+    const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, len, 16), chrome); rail.rotation.z = Math.PI / 2; rail.position.set(0, y, 0); routeRoot.add(rail);
+    for (const e of [-1, 1]) { const cap = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 12), chrome); cap.position.set(e * len / 2, y, 0); routeRoot.add(cap); }
+    const ts = await Promise.all(rows[r].map((d) => Promise.all([tex(`${TEX}p-${d}-front.webp`), tex(`${TEX}p-${d}-back.webp`)])));
+    ts.forEach(([f, b], k) => {
+      const px = (k - (n - 1) / 2) * gap;
+      const hook = new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.009, 8, 20, Math.PI * 1.4), chrome); hook.rotation.set(0, Math.PI / 2, Math.PI * 0.8); hook.position.set(px, y - 0.02, 0); routeRoot.add(hook);
+      const p = makePouch(f, b, { lo: true }); p.root.scale.setScalar(sc);
+      const pivot = new THREE.Group(); pivot.position.set(px, y - 0.06, 0); p.root.position.set(0, -(PH / 2 - 0.035 * PH) * sc, 0); pivot.add(p.root); routeRoot.add(pivot);
+      pivot.userData = { i: i++, py: y - 0.06 }; hung.push(pivot);
+    });
+  }
 }
-const travellers = [];
 function updateRoute(s, time) {
-  routeRoot.visible = s > 2.95 && s < 4.25; if (!routeRoot.visible || !trailMat) return;
-  const r = s - 3, p = ease(seg(r, 0.08, 0.6));
-  trailMat.uniforms.uP.value = p * 1.02; trailMat.uniforms.uT.value = time;
-  const labs = document.querySelectorAll('.city');
-  labs.forEach((el) => {
-    const at = +el.dataset.at, on = p > at;
-    el.classList.toggle('on', on);
-    const v = routeRoot.userData.curve.getPointAt(at).clone().add(routeRoot.position); v.project(camera);
-    const hw = el.offsetWidth / 2 + 10; el.style.transform = `translate(${clamp((v.x * 0.5 + 0.5) * VW(), hw, VW() - hw)}px, ${(-v.y * 0.5 + 0.5) * VH()}px) translate(-50%, -140%)`;
+  routeRoot.visible = s > 2.95 && s < 4.25; if (!routeRoot.visible) return;
+  const r = s - 3;
+  hung.forEach((p) => {
+    const u = p.userData, k = easeOut(seg(r, 0.06 + u.i * 0.045, 0.24 + u.i * 0.045));
+    p.position.y = u.py + (1 - k) * 2.6; p.visible = k > 0.001; p.scale.setScalar(0.85 + 0.15 * k);
+    p.rotation.z = Math.sin(time * 1.1 + u.i) * 0.025 + (1 - k) * 0.4 * Math.sin(u.i);
+    p.rotation.y = Math.sin(time * 0.7 + u.i * 2) * 0.05 + ptr.sx * 0.06;
   });
-  travellers.forEach((m) => {
-    const u = (m.userData.off + time * 0.045) % 1, vis = u < p - 0.02;
-    m.visible = vis; if (!vis) return;
-    const c = routeRoot.userData.curve; m.position.copy(c.getPointAt(u)); m.position.y += 0.22;
-    const tg = c.getTangentAt(u); m.rotation.set(0, Math.atan2(tg.x, tg.z) - Math.PI / 2 + 0.35, Math.atan2(tg.y, Math.hypot(tg.x, tg.z)) * 0.6 + Math.sin(time * 1.3 + u * 9) * 0.06);
-  });
-  const n = Math.round(10000 * ease(seg(r, 0.22, 0.5)));
-  $('#stores').textContent = n.toLocaleString('en-US') + (n >= 10000 ? '+' : '');
 }
 
 // ---------- scene 5: open a pack ----------
 const openRoot = new THREE.Group(); openRoot.position.y = A.open; scene.add(openRoot);
-let op = null; const opCards = []; let opState = 0, opBusy = false; const opBlob = blob(1.5, 0.8); opBlob.position.set(0, -1.75, 0); openRoot.add(opBlob);
+let op = null; const opCards = []; const opCardsG = new THREE.Group(); openRoot.add(opCardsG); let opState = 0, opBusy = false; const opBlob = blob(1.5, 0.8); opBlob.position.set(0, -1.75, 0); openRoot.add(opBlob);
 async function buildOpen() {
   if (op) return;
   const [f, b, back, ...fr] = await Promise.all([tex(TEX + 'dh-front.webp'), tex(TEX + 'dh-back.webp'), tex(TEX + 'c-back.webp'), ...CARDS.map((c) => tex(TEX + c.t + '.webp'))]);
   op = makePouch(f, b, { window: true }); openRoot.add(op.root);
-  CARDS.forEach((c, i) => { const m = makeCard(fr[i], back, c.k); openRoot.add(m); opCards.push(m); });
+  CARDS.forEach((c, i) => { const m = makeCard(fr[i], back, c.k); opCardsG.add(m); opCards.push(m); });
   resetOpen();
 }
 function resetOpen() {
@@ -392,13 +375,13 @@ async function tapOpen() {
     await tween(0.6, (k) => { op.top.position.set(1.3 * k, 2.0 * k, 0.4 * k); op.top.rotation.set(0.5 * k, -0.4 * k, -1.1 * k); }, easeOut);
     op.top.visible = false;
     tween(0.7, (k) => { op.body.position.set(0, -0.6 * k, -0.6 * k); });
-    await Promise.all(opCards.map((m, i) => tween(0.75, (k) => { m.position.y = CARD_Y0 + k * 1.05; m.position.z = 0.3 * k + (4 - i) * 0.004; })));
+    await Promise.all(opCards.map((m, i) => tween(0.75, (k) => { m.position.y = CARD_Y0 + k * 1.05; const o = seg(k, 0.85, 1); m.position.z = STACKZ[i] * (1 - o) + o * (0.3 + (4 - i) * 0.004); })));
     opState = 1; $('#openhint').textContent = 'Tap to reveal';
   } else {
     const i = opState - 1, m = opCards[i], slot = i, y0 = m.position.y, z0 = m.position.z;
     if (i === 4) {
       await tween(0.9, (k) => { m.position.set(0, lerp(y0, 0.15, k), lerp(z0, 1.3, k)); m.rotation.y = Math.sin(k * Math.PI) * 0.6; m.scale.setScalar(lerp(1, 1.15, k)); });
-      $('#hitmsg').classList.add('on'); burst(); $('#openhint').textContent = 'Double Hit.'; $('#again').hidden = false; $('#openbtn').hidden = true; opState = 6;
+      $('#hitmsg').classList.add('on'); setTimeout(() => $('#hitmsg').classList.remove('on'), 2400); burst(); $('#openhint').textContent = 'Double Hit.'; $('#again').hidden = false; $('#openbtn').hidden = true; opState = 6;
     } else {
       const x = (MOB ? -0.32 : -1.45) + slot * (MOB ? 0.16 : 0.34);
       await tween(0.55, (k) => { m.position.set(lerp(0, x, k), lerp(y0, MOB ? -0.35 : 0.55, k) + Math.sin(k * Math.PI) * 0.3, lerp(z0, 0.4 + slot * 0.02, k)); m.rotation.z = lerp(0, MOB ? 0 : 0.08 - slot * 0.04, k); m.scale.setScalar(lerp(1, MOB ? 0.42 : 0.62, k)); });
@@ -412,7 +395,8 @@ const sparks = (() => { const n = 200, g = new THREE.BufferGeometry(), p = new F
 function burst() { for (let i = 0; i < sparks.n; i++) { sparks.p.set([0, 0.15, 1.3], i * 3); const d = new THREE.Vector3().randomDirection().multiplyScalar(1.2 + Math.random() * 2); sparks.v.set([d.x, d.y, d.z * 0.5], i * 3); } sparks.t = 0; sparks.m.opacity = 1; }
 function updateOpen(s, time, dt) {
   openRoot.visible = s > 3.95; if (!op || !openRoot.visible) return;
-  if (opState === 0) { op.root.rotation.y = Math.sin(time * 0.6) * 0.12 + ptr.sx * 0.2; op.root.position.y = Math.sin(time * 1.05) * 0.045; } else op.root.rotation.y *= 0.92;
+  if (opState === 0) { op.root.rotation.y = Math.sin(time * 0.6) * 0.12 + ptr.sx * 0.2; op.root.position.y = Math.sin(time * 1.05) * 0.045; } else { op.root.rotation.y *= 0.92; op.root.position.y *= 0.92; }
+  opCardsG.rotation.y = op.root.rotation.y; opCardsG.position.y = op.root.position.y;
   opBlob.material.opacity = opState === 0 ? 0.9 : 0.4;
   if (opState === 6) opCards[4].rotation.y = Math.sin(time * 0.8) * 0.3 + ptr.sx * 0.4;
   if (sparks.t < 2) { sparks.t += dt; for (let i = 0; i < sparks.n; i++) { sparks.v[i * 3 + 1] -= 2.4 * dt; for (let a = 0; a < 3; a++) sparks.p[i * 3 + a] += sparks.v[i * 3 + a] * dt; } sparks.g.attributes.position.needsUpdate = true; sparks.m.opacity = clamp(1 - sparks.t / 1.8); }
@@ -422,16 +406,17 @@ function updateOpen(s, time, dt) {
 let K = [];
 function buildPath() {
   const M = MOB, hx = M ? 0 : -0.95, hy = M ? 1.5 : 0;
+  const asp = VW() / VH(), wide = clamp((asp - 1.05) / 0.6), lx = -1.6 * wide, sx = lerp(13.5, 11.5, wide);
   K = [
     { s: 0.0, p: [0, 0.35, M ? 7.2 : 5.0], l: [hx, hy, 0] },
     { s: 1.0, p: [0, 0.2, M ? 6.8 : 4.7], l: [hx, hy, 0] },
     { s: 1.25, p: [0.2, 0.15, M ? 6.2 : 4.2], l: [hx * 0.85, hy * 0.75 + 0.1, 0] },
     { s: 1.6, p: [0, 0.35, M ? 6.6 : 5.0], l: [hx * 0.65, hy * 0.6 + 0.25, 0.3] },
     { s: 1.9, p: [0, 0.3, M ? 6.2 : 4.6], l: [hx * 0.6, hy * 0.55 + 0.2, 0.4] },
-    { s: 2.12, p: [0, A.lineup + 1.2, M ? 13 : 11.5], l: [M ? 0 : -1.6, A.lineup + (M ? 1.9 : 0.1), 0] },
-    { s: 2.95, p: [0, A.lineup + 0.4, M ? 12.2 : 10.2], l: [M ? 0 : -1.6, A.lineup + (M ? 1.9 : 0.1), 0] },
-    { s: 3.12, p: [0, A.route + 0.4, M ? 15 : 12], l: [0, A.route + (M ? 1.6 : 0.6), -6] },
-    { s: 3.95, p: [0.5, A.route + 0.2, M ? 13.5 : 10.8], l: [0, A.route + (M ? 1.6 : 0.6), -6] },
+    { s: 2.12, p: [0, A.lineup + 1.2, M ? 13 : sx], l: [M ? 0 : lx, A.lineup + (M ? 1.9 : -0.2), 0] },
+    { s: 2.95, p: [0, A.lineup + 0.4, M ? 12.2 : sx - 1.3], l: [M ? 0 : lx, A.lineup + (M ? 1.9 : -0.2), 0] },
+    { s: 3.12, p: [M ? 0 : -0.5, A.route + 0.4, M ? 9.8 : 10.2], l: [M ? 0 : -2.1 * wide, A.route + (M ? -1.1 : -0.2), 0] },
+    { s: 3.95, p: [M ? 0.2 : 0.25, A.route + 0.15, M ? 9.4 : 9.6], l: [M ? 0 : -2.1 * wide, A.route + (M ? -1.1 : -0.2), 0] },
     { s: 4.12, p: [0, A.open + 0.15, M ? 7.0 : 4.8], l: [M ? 0 : -0.75, A.open + (M ? 1.1 : 0.2), 0] },
     { s: 9.0, p: [0, A.open + 0.15, M ? 7.0 : 4.8], l: [M ? 0 : -0.75, A.open + (M ? 1.1 : 0.2), 0] },
   ];
