@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NoGuilt Imports</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="NoGuilt imports sealed Japanese and Korean Pokémon booster boxes, One Piece, Dragon Ball, Yu-Gi-Oh! and Japanese character goods, wholesale across the USA.">
+<meta name="theme-color" content="#9fb6ee">
+<link rel="icon" href="../../img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../site.css?v=3d">
+<style>:root{--em:#C2337A}html,.loader{background:linear-gradient(180deg,#3B5BB5,#9FB6EE 45%,#FFD6CF)}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
+<script>
+const JP = (c, name, code, line, extra) => ({ front: `tex/k-${c}-front.webp`, back: `tex/k-${c}-back.webp`, aspect: extra?.aspect || 1.95, name, guarantee: `${code} · Japanese · sealed booster box`, inside: line });
+window.NG = {
+  shared: '../tex/',
+  palette: [
+    { z: '#3B5BB5', m: '#9FB6EE', h: '#FFD6CF', b: '#E9EAF7', lit: '#FFF9F3', sh: '#AAB7DC' },
+    { z: '#4C55A8', m: '#B9A9E6', h: '#FFC9C2', b: '#F1E3EE', lit: '#FFF3EC', sh: '#B7A8D8' },
+    { z: '#2B2F6E', m: '#7D74BE', h: '#F4B4B0', b: '#C8BBDC', lit: '#FBE6E6', sh: '#8E82C0' },
+  ],
+  hero: {
+    front: 'tex/k-M1S-front.webp', back: 'tex/k-M1S-back.webp', aspect: 1200 / 595, window: null, cardBack: '../tex/c-back.webp', cardScale: 1.28, cardY: 0,
+    cards: [{ t: 'tex/j-c1.webp', k: 0 }, { t: 'tex/j-c3.webp', k: 0 }, { t: 'tex/j-c2.webp', k: 0 }, { t: 'tex/j-ex.webp', k: 1 }, { t: 'tex/j-hit.webp', k: 2 }],
+  },
+  hitHint: 'Special art.',
+  line: {
+    rails: false, scale: 0.62, scaleMobile: 0.54, gap: 1.05, gapMobile: 0.8, rowGap: 2.35, rowGapMobile: 1.75, cam: 10, camMobile: 13.6,
+    rows: [['M6a', 'M1S', 'M1L', 'M2', 'M3'], ['M4', 'M5', 'SV11W', 'SV11B']],
+    rowsMobile: [['M6a', 'M1S', 'M1L'], ['M2', 'M3', 'M4'], ['M5', 'SV11W', 'SV11B']],
+    items: {
+      M6a: JP('M6a', '30th Celebration', 'M6a', '20 packs per box · 6 cards per pack'),
+      M1S: JP('M1S', 'Mega Symphonia', 'M1S', '30 packs per box · 5 cards per pack'),
+      M1L: JP('M1L', 'Mega Brave', 'M1L', '30 packs per box · 5 cards per pack'),
+      M2: JP('M2', 'Inferno X', 'M2', '30 packs per box · 5 cards per pack'),
+      M3: JP('M3', 'Nihil Zero', 'M3', '30 packs per box · 5 cards per pack'),
+      M4: JP('M4', 'Ninja Spinner', 'M4', '30 packs per box · 5 cards per pack'),
+      M5: JP('M5', 'Abyss Eye', 'M5', '30 packs per box · 5 cards per pack'),
+      SV11W: JP('SV11W', 'White Flare', 'SV11W', '20 packs per box · 7 cards per pack'),
+      SV11B: JP('SV11B', 'Black Bolt', 'SV11B', '20 packs per box · 7 cards per pack'),
+    },
+  },
+  extra: { type: 'route', travellers: ['M1S', 'M4', 'M6a', 'SV11W'], cam: { y: 0.3, z: 11, zMobile: 13.5, ly: 0.2, lz: -4 } },
+};
+</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vig"></div>
+<div class="loader"><i></i></div>
+<header><a href="../../index.html" aria-label="NoGuilt home"><img src="../../img/logo.png" alt="NoGuilt"></a>
+<nav><a href="../../index.html#catalog">Catalog</a><a href="../">Repacks</a><a class="cta" href="#contact">Wholesale</a></nav></header>
+
+<main>
+<section id="hero" data-s style="height:100vh"><div class="stick"><div class="copy">
+ <p class="label">NoGuilt Imports · Japan &amp; Korea</p>
+ <h1>Straight from<br><em>Japan.</em></h1>
+ <p>Sealed Japanese and Korean booster boxes, imported direct and sold wholesale across the USA.</p>
+ <div class="btns"><a class="btn" href="#tear">Open a Japanese pack</a><a class="btn ghost" href="#contact">Wholesale</a></div>
+</div></div></section>
+
+<section id="tear" data-s style="height:210vh"><div class="stick"><div class="copy steps">
+ <div class="step on"><p class="label">01 · The pack</p><h2>Mega <em>Symphonia.</em></h2><p>Japanese MEGA series. 30 packs per box, 5 cards per pack.</p></div>
+ <div class="step"><p class="big" id="count">0</p><h2>cards. <em>Japanese print.</em></h2><p>The original Japanese edition: Japanese text, Japanese packs, sealed.</p></div>
+ <div class="step"><p class="label">The pull</p><h2>Special <em>art rare.</em></h2><p>Mega Gardevoir ex SAR. Shown as an example; pulls vary by pack.</p></div>
+</div></div></section>
+
+<section id="line" data-s style="height:190vh"><div class="stick"><div class="copy steps">
+ <div class="step on"><p class="label">02 · The sets</p><h2>Every new set.<br><em>In stock.</em></h2><p>Japanese and Korean releases, sealed. Tap a pack for the box details.</p></div>
+ <div class="step"><p class="label">How we sell</p><h2>Sealed boxes. <em>Wholesale.</em></h2>
+  <div class="stats"><div><b>88</b><span>SKUs in the catalog</span></div><div><b>5–7</b><span>days to ship after payment</span></div><div><b>100%</b><span>factory sealed</span></div><div><b>JP + KR</b><span>editions</span></div></div>
+  <p class="hint"><a class="link" href="../../index.html#catalog">See the full catalog →</a></p></div>
+</div></div></section>
+
+<section id="extra" data-s style="height:150vh"><div class="stick"><div class="copy steps">
+ <div class="step on"><p class="label">03 · The route</p><h2>Tokyo. Kobe. Seoul.<br><em>USA.</em></h2><p>We import direct and ship from Miami to stores across the USA.</p></div>
+ <div class="step"><h2><em>10,000+</em><br>stores reached.</h2><p>Our products sell in more than ten thousand stores through our retail partners.</p></div>
+</div></div></section>
+
+<section id="open" data-s style="height:150vh"><div class="stick"><div class="copy">
+ <p class="label">04 · Your turn</p><h2>Open <em>a pack.</em></h2><p>Tap the pack, then tap to reveal each card.</p>
+</div></div></section>
+
+<section id="contact" data-s><div class="card">
+ <p class="label">What we import</p><h2>More than <em style="color:var(--accent)">Pokémon.</em></h2>
+ <div class="brands">
+  <div><img src="../../img/cut/M1S-JP.webp" alt="">Pokémon · Japanese</div>
+  <div><img src="../../img/cut/SV2A-KR.webp" alt="">Pokémon · Korean</div>
+  <div><img src="../../img/cut/OP14-JP.webp" alt="">One Piece</div>
+  <div><img src="../../img/cut/DB-FB10-JP.webp" alt="">Dragon Ball</div>
+  <div><img src="../../img/cut/YGO-COR-JP.webp" alt="">Yu-Gi-Oh!</div>
+  <div><img src="../../img/cut/PP95.webp" alt="">Character goods</div>
+ </div>
+ <p>Plush and mascots from Pokémon, Kirby, Super Mario, Zelda and Rilakkuma. Wholesale pricing for retailers, distributors and chains.</p>
+ <div class="btns"><a class="btn acc" href="mailto:info@noguilt.us?subject=NoGuilt%20imports%20wholesale%20catalog">Request the catalog</a><a class="btn ghost" href="../../index.html#catalog">Browse the catalog</a></div>
+</div></section>
+</main>
+
+<div id="det"><button class="x" aria-label="Close">×</button><b></b><div class="g"></div><div class="i"></div></div>
+<div class="city" data-at="0.06">Tokyo · Kobe · Seoul</div>
+<div class="city" data-at="0.5">Miami</div>
+<div class="city" data-at="0.95">Across the USA</div>
+<div class="openui"><span id="openhint">Tap the pack</span><button class="btn" id="openbtn">Open</button><button class="btn acc" id="again" hidden>Open another</button></div>
+<div id="hitmsg">Special art.</div>
+
+<footer><div class="row"><span>© 2026 NoGuilt Corporation · Miami, Florida · <a href="mailto:info@noguilt.us">info@noguilt.us</a></span>
+ <span class="links"><a href="../">NoGuilt Repacks</a><a href="../../index.html">Catalog</a><a href="../../buy.html">Sell my bulk cards</a></span></div>
+ <p>NoGuilt is an independent importer and distributor and is not affiliated with The Pokémon Company, Nintendo, Creatures, GAME FREAK, Bandai, Konami or other brand owners. Pokémon, One Piece, Dragon Ball, Yu-Gi-Oh! and all related names are trademarks of their respective owners. Card images are examples; pulls vary.</p>
+</footer>
+<script>
+(function(){var d=document.documentElement;function sec(id){return document.getElementById(id).getBoundingClientRect()}
+function f(){var h=innerHeight,o=sec('open'),c=sec('contact'),l=sec('line'),x=sec('extra');
+d.classList.toggle('atopen',o.top<h*.35&&c.top>h*.85);d.classList.toggle('atline',l.top<h*.4&&l.bottom>h*.6);d.classList.toggle('atextra',x.top<h*.4&&x.bottom>h*.6)}
+addEventListener('scroll',f,{passive:true});f();setTimeout(function(){d.classList.add('ready')},7000)})();
+</script>
+<script type="module" src="../engine.js?v=3d"></script>
+</body></html>
