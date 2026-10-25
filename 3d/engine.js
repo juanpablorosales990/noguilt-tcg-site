@@ -289,7 +289,7 @@ const extraRoot = new THREE.Group(); extraRoot.position.y = A.extra; scene.add(e
 let PL = null, plFaces = [], trailMat = null, curve = null; const travellers = [];
 async function buildExtra() {
   const X = NG.extra;
-  try { await Promise.race([Promise.all([document.fonts.load('italic 800 100px Fraunces'), document.fonts.load('600 24px "Inter Tight"')]), new Promise((r) => setTimeout(r, 2500))]); } catch (e) {}
+  try { await Promise.race([Promise.all([document.fonts.load('800 92px "Bricolage Grotesque"'), document.fonts.load('600 24px "Inter Tight"')]), new Promise((r) => setTimeout(r, 2500))]); } catch (e) {}
   if (X.type === 'private') {
     plFaces = X.faces.map((f) => privateFace(f));
     const back = await tex(X.back);
@@ -316,7 +316,7 @@ function privateFace(f) { // generated "your brand" pouch art
   x.fillStyle = 'rgba(255,255,255,.18)'; for (let i = 0; i < 1200; i += 14) x.fillRect(0, i, 630, 3); // crimp texture top/bottom
   x.fillStyle = g; x.fillRect(0, 70, 630, 1040);
   x.globalCompositeOperation = 'destination-out'; x.beginPath(); x.roundRect(255, 26, 120, 40, 20); x.fill(); x.globalCompositeOperation = 'source-over';
-  x.fillStyle = 'rgba(255,255,255,.9)'; x.font = 'italic 800 100px "Fraunces", Georgia, serif'; x.textAlign = 'center'; x.fillText(f.name, 315, 330);
+  x.fillStyle = 'rgba(255,255,255,.9)'; x.font = '800 92px "Bricolage Grotesque", Arial, sans-serif'; x.textAlign = 'center'; x.fillText(f.name, 315, 330);
   x.font = '600 34px "Inter Tight", Arial, sans-serif'; x.fillText(f.tag, 315, 400);
   x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 6; x.beginPath(); x.roundRect(124, 520, 382, 531, 22); x.stroke();
   x.font = '600 24px "Inter Tight", Arial, sans-serif'; x.fillText('YOUR ART · YOUR TIERS', 315, 800);

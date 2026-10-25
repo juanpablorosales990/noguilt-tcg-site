@@ -5,8 +5,8 @@
 <meta name="theme-color" content="#8E67B7">
 <link rel="icon" href="../img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css?v=3f">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css?v=3h">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
 <script>
 const PK = (d, name, guarantee, inside) => ({ front: `tex/p-${d}-front.webp`, back: `tex/p-${d}-back.webp`, aspect: 1200 / 630, name, guarantee, inside });
@@ -42,7 +42,7 @@ window.NG = {
   },
   extra: {
     type: 'private', aspect: 1200 / 630, back: 'tex/p-holo-back.webp',
-    faces: [{ a: '#753782', b: '#D73E92', name: 'Your brand', tag: '1 HIT GUARANTEED' }, { a: '#8E67B7', b: '#E3E030', name: 'Store name', tag: '12 CARDS · 1 HOLO' }, { a: '#D73E92', b: '#E3E030', name: 'Your line', tag: 'SPORTS · 10 CARDS' }],
+    faces: [{ a: '#753782', b: '#D73E92', name: 'Your brand', tag: '1 HIT GUARANTEED' }, { a: '#5B3A9E', b: '#8E67B7', name: 'Store name', tag: '12 CARDS · 1 HOLO' }, { a: '#B8336F', b: '#E88BB9', name: 'Your line', tag: 'SPORTS · 10 CARDS' }],
     cam: { y: 0.1, z: 5.4, zMobile: 8.0, ly: 0.35, lz: 0 },
   },
 };
@@ -53,7 +53,7 @@ window.NG = {
 <div class="vig"></div>
 <div class="loader"><i></i></div>
 <header><a href="../" aria-label="NoGuilt home"><img src="../img/logo-color.png" alt="NoGuilt"></a>
-<nav><a href="../catalog.html">Catalog</a><a href="../repacks-catalog.html">Specs</a><a class="cta" href="#contact">Wholesale</a></nav></header>
+<nav><a class="m-keep" href="imports/">Imports</a><a href="../catalog.html">Catalog</a><a href="../repacks-catalog.html">Specs</a><a class="cta" href="#contact">Wholesale</a></nav></header>
 
 <main>
 <section id="hero" data-s style="height:100vh"><div class="stick"><div class="copy">
@@ -108,5 +108,5 @@ function f(){var h=innerHeight,o=sec('open'),c=sec('contact'),l=sec('line'),x=se
 d.classList.toggle('atopen',o.top<h*.35&&c.top>h*.85);d.classList.toggle('atline',l.top<h*.4&&l.bottom>h*.6);d.classList.toggle('atextra',x.top<h*.4&&x.bottom>h*.6)}
 addEventListener('scroll',f,{passive:true});f();setTimeout(function(){d.classList.add('ready')},7000)})();
 </script>
-<script type="module" src="engine.js?v=3f"></script>
+<script type="module" src="engine.js?v=3h"></script>
 </body></html>
