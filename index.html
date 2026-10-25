@@ -3,21 +3,21 @@
 <link rel="canonical" href="https://tcg.noguilt.us/">
 <meta property="og:title" content="NoGuilt · Japanese & Korean TCG Imports"><meta property="og:description" content="Sealed Japanese and Korean booster boxes, One Piece, Dragon Ball, Yu-Gi-Oh! and character goods, wholesale across the USA."><meta property="og:image" content="https://tcg.noguilt.us/img/og.jpg"><meta property="og:url" content="https://tcg.noguilt.us/">
 <meta name="description" content="NoGuilt imports sealed Japanese and Korean Pokémon booster boxes, One Piece, Dragon Ball, Yu-Gi-Oh! and Japanese character goods, wholesale across the USA.">
-<meta name="theme-color" content="#9fb6ee">
+<meta name="theme-color" content="#8E67B7">
 <link rel="icon" href="img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="3d/site.css?v=3e">
-<style>:root{--em:#C2337A}html,.loader{background:linear-gradient(180deg,#3B5BB5,#9FB6EE 45%,#FFD6CF)}</style>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="3d/site.css?v=3f">
+
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
 <script>
 const JP = (c, name, code, line, extra) => ({ front: `3d/imports/tex/k-${c}-front.webp`, back: `3d/imports/tex/k-${c}-back.webp`, aspect: extra?.aspect || 1.95, name, guarantee: `${code} · Japanese · sealed booster box`, inside: line });
 window.NG = {
   shared: '3d/tex/',
   palette: [
-    { z: '#3B5BB5', m: '#9FB6EE', h: '#FFD6CF', b: '#E9EAF7', lit: '#FFF9F3', sh: '#AAB7DC' },
-    { z: '#4C55A8', m: '#B9A9E6', h: '#FFC9C2', b: '#F1E3EE', lit: '#FFF3EC', sh: '#B7A8D8' },
-    { z: '#2B2F6E', m: '#7D74BE', h: '#F4B4B0', b: '#C8BBDC', lit: '#FBE6E6', sh: '#8E82C0' },
+    { z: '#5B3A9E', m: '#8E67B7', h: '#F4BEDD', b: '#EBDDF4', lit: '#FFF8FC', sh: '#B59AD8' },
+    { z: '#6A3A9A', m: '#A06BC0', h: '#FFC9DF', b: '#F3DDEC', lit: '#FFF5FA', sh: '#BE97D4' },
+    { z: '#3E1F66', m: '#753782', h: '#E58BB9', b: '#C9A7D8', lit: '#FCE9F2', sh: '#9A72BC' },
   ],
   hero: {
     front: '3d/imports/tex/k-M1S-front.webp', back: '3d/imports/tex/k-M1S-back.webp', aspect: 1200 / 595, window: null, cardBack: '3d/tex/c-back.webp', cardScale: 1.28, cardY: 0,
@@ -25,7 +25,7 @@ window.NG = {
   },
   hitHint: 'Special art.',
   line: {
-    rails: false, scale: 0.62, scaleMobile: 0.54, gap: 1.05, gapMobile: 0.8, rowGap: 2.35, rowGapMobile: 1.75, cam: 10, camMobile: 13.6,
+    rails: true, scale: 0.62, scaleMobile: 0.5, gap: 0.98, gapMobile: 0.72, rowGap: 2.4, rowGapMobile: 1.62, cam: 10, camMobile: 14.4, lyMobile: 0.62,
     rows: [['M6a', 'M1S', 'M1L', 'M2', 'M3'], ['M4', 'M5', 'SV11W', 'SV11B']],
     rowsMobile: [['M6a', 'M1S', 'M1L'], ['M2', 'M3', 'M4'], ['M5', 'SV11W', 'SV11B']],
     items: {
@@ -48,7 +48,7 @@ window.NG = {
 <canvas id="gl" aria-hidden="true"></canvas>
 <div class="vig"></div>
 <div class="loader"><i></i></div>
-<header><a href="./" aria-label="NoGuilt home"><img src="img/logo.png" alt="NoGuilt"></a>
+<header><a href="./" aria-label="NoGuilt home"><img src="img/logo-color.png" alt="NoGuilt"></a>
 <nav><a href="catalog.html">Catalog</a><a href="repacks.html">Repacks</a><a class="cta" href="#contact">Wholesale</a></nav></header>
 
 <main>
@@ -68,7 +68,7 @@ window.NG = {
 <section id="line" data-s style="height:190vh"><div class="stick"><div class="copy steps">
  <div class="step on"><p class="label">02 · The sets</p><h2>Every new set.<br><em>In stock.</em></h2><p>Japanese and Korean releases, sealed. Tap a pack for the box details.</p></div>
  <div class="step"><p class="label">How we sell</p><h2>Sealed boxes. <em>Wholesale.</em></h2>
-  <div class="stats"><div><b>88</b><span>SKUs in the catalog</span></div><div><b>5–7</b><span>days to ship after payment</span></div><div><b>100%</b><span>factory sealed</span></div><div><b>JP + KR</b><span>editions</span></div></div>
+  <div class="stats"><div><b>88</b><span>SKUs</span></div><div><b>5–7</b><span>days to ship</span></div><div><b>100%</b><span>factory sealed</span></div><div><b>JP + KR</b><span>editions</span></div></div>
   <p class="hint"><a class="link" href="catalog.html">See the full catalog →</a></p></div>
 </div></div></section>
 
@@ -82,7 +82,7 @@ window.NG = {
 </div></div></section>
 
 <section id="contact" data-s><div class="card">
- <p class="label">What we import</p><h2>More than <em style="color:var(--accent)">Pokémon.</em></h2>
+ <p class="label">What we import</p><h2>More than <em >Pokémon.</em></h2>
  <div class="brands">
   <div><img src="img/cut/M1S-JP.webp" alt="">Pokémon · Japanese</div>
   <div><img src="img/cut/SV2A-KR.webp" alt="">Pokémon · Korean</div>
@@ -113,5 +113,5 @@ function f(){var h=innerHeight,o=sec('open'),c=sec('contact'),l=sec('line'),x=se
 d.classList.toggle('atopen',o.top<h*.35&&c.top>h*.85);d.classList.toggle('atline',l.top<h*.4&&l.bottom>h*.6);d.classList.toggle('atextra',x.top<h*.4&&x.bottom>h*.6)}
 addEventListener('scroll',f,{passive:true});f();setTimeout(function(){d.classList.add('ready')},7000)})();
 </script>
-<script type="module" src="3d/engine.js?v=3e"></script>
+<script type="module" src="3d/engine.js?v=3f"></script>
 </body></html>

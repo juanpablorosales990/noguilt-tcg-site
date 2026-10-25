@@ -3,11 +3,11 @@
 <link rel="canonical" href="https://tcg.noguilt.us/repacks.html">
 <meta property="og:title" content="NoGuilt Repacks · Wholesale"><meta property="og:description" content="Sealed packs of genuine Pokémon and sports cards with the guarantee printed on the front. Wholesale for retailers."><meta property="og:image" content="https://tcg.noguilt.us/img/og.jpg"><meta property="og:url" content="https://tcg.noguilt.us/repacks.html">
 <meta name="description" content="NoGuilt Repacks: sealed packs of genuine Pokémon and sports cards with the guarantee printed on the front. Wholesale for retailers, distributors and chains.">
-<meta name="theme-color" content="#A7A3E6">
+<meta name="theme-color" content="#8E67B7">
 <link rel="icon" href="img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="3d/site.css?v=3e">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="3d/site.css?v=3f">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
 <script>
 const PK = (d, name, guarantee, inside) => ({ front: `3d/tex/p-${d}-front.webp`, back: `3d/tex/p-${d}-back.webp`, aspect: 1200 / 630, name, guarantee, inside });
@@ -15,9 +15,9 @@ const SPEC = '3.15 × 6.0 in pouch · clear window + hang hole · ages 6+';
 window.NG = {
   shared: '3d/tex/',
   palette: [
-    { z: '#4A4FA6', m: '#A7A3E6', h: '#F7D9C9', b: '#EFE6F4', lit: '#FFF8F1', sh: '#B6AEDD' },
-    { z: '#5A4FA0', m: '#C8A3D8', h: '#FFD9B8', b: '#F4E2E6', lit: '#FFF4E6', sh: '#BFA6D6' },
-    { z: '#2E2A6E', m: '#7E6BB8', h: '#F2B9A6', b: '#C9B7DA', lit: '#FBE8E2', sh: '#8E7FBF' },
+    { z: '#5B3A9E', m: '#8E67B7', h: '#F4BEDD', b: '#EBDDF4', lit: '#FFF8FC', sh: '#B59AD8' },
+    { z: '#6A3A9A', m: '#A06BC0', h: '#FFC9DF', b: '#F3DDEC', lit: '#FFF5FA', sh: '#BE97D4' },
+    { z: '#3E1F66', m: '#753782', h: '#E58BB9', b: '#C9A7D8', lit: '#FCE9F2', sh: '#9A72BC' },
   ],
   hero: {
     front: '3d/tex/dh-front.webp', back: '3d/tex/dh-back.webp', aspect: 1200 / 630, window: [124, 547, 506, 1078], cardBack: '3d/tex/c-back.webp', cardScale: 1, cardY: -0.337,
@@ -43,7 +43,7 @@ window.NG = {
   },
   extra: {
     type: 'private', aspect: 1200 / 630, back: '3d/tex/p-holo-back.webp',
-    faces: [{ a: '#6d4cff', b: '#ff7ad6', name: 'Your brand', tag: '1 HIT GUARANTEED' }, { a: '#0e8f8a', b: '#8fe3c6', name: 'Store name', tag: '12 CARDS · 1 HOLO' }, { a: '#f0552f', b: '#ffc46b', name: 'Your line', tag: 'SPORTS · 10 CARDS' }],
+    faces: [{ a: '#753782', b: '#D73E92', name: 'Your brand', tag: '1 HIT GUARANTEED' }, { a: '#8E67B7', b: '#E3E030', name: 'Store name', tag: '12 CARDS · 1 HOLO' }, { a: '#D73E92', b: '#E3E030', name: 'Your line', tag: 'SPORTS · 10 CARDS' }],
     cam: { y: 0.1, z: 5.4, zMobile: 8.0, ly: 0.35, lz: 0 },
   },
 };
@@ -53,7 +53,7 @@ window.NG = {
 <canvas id="gl" aria-hidden="true"></canvas>
 <div class="vig"></div>
 <div class="loader"><i></i></div>
-<header><a href="./" aria-label="NoGuilt home"><img src="img/logo.png" alt="NoGuilt"></a>
+<header><a href="./" aria-label="NoGuilt home"><img src="img/logo-color.png" alt="NoGuilt"></a>
 <nav><a href="catalog.html">Catalog</a><a href="repacks-catalog.html">Specs</a><a class="cta" href="#contact">Wholesale</a></nav></header>
 
 <main>
@@ -89,7 +89,7 @@ window.NG = {
 </div></div></section>
 
 <section id="contact" data-s><div class="card">
- <p class="label">Wholesale</p><h2>Put them on <em style="color:var(--accent)">your counter.</em></h2>
+ <p class="label">Wholesale</p><h2>Put them on <em >your counter.</em></h2>
  <p>Wholesale pricing, case packs and item setup sheets for all nine packs. For retailers, distributors and chains.</p>
  <div class="btns"><a class="btn acc" href="mailto:info@noguilt.us?subject=NoGuilt%20Repacks%20wholesale%20pricing">Get wholesale pricing</a><a class="btn ghost" href="repacks-catalog.html">See the full catalog</a></div>
 </div></section>
@@ -109,5 +109,5 @@ function f(){var h=innerHeight,o=sec('open'),c=sec('contact'),l=sec('line'),x=se
 d.classList.toggle('atopen',o.top<h*.35&&c.top>h*.85);d.classList.toggle('atline',l.top<h*.4&&l.bottom>h*.6);d.classList.toggle('atextra',x.top<h*.4&&x.bottom>h*.6)}
 addEventListener('scroll',f,{passive:true});f();setTimeout(function(){d.classList.add('ready')},7000)})();
 </script>
-<script type="module" src="3d/engine.js?v=3e"></script>
+<script type="module" src="3d/engine.js?v=3f"></script>
 </body></html>

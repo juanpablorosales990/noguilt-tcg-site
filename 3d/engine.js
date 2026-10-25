@@ -258,8 +258,8 @@ async function buildLine() {
       const px = (k - (n - 1) / 2) * gap, pivot = new THREE.Group();
       if (L.rails) {
         pivot.position.set(px, y + 0.95 * sc, 0); p.root.position.set(0, -(p.PH / 2 - 0.035 * p.PH) * sc * (it.scale || 1), 0);
-        const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.3, 14), chrome); peg.rotation.x = Math.PI / 2 - 0.18; peg.position.set(px, y + 0.95 * sc + 0.035, -0.02); lineRoot.add(peg);
-        const tip = new THREE.Mesh(new THREE.SphereGeometry(0.024, 14, 10), chrome); tip.position.set(px, y + 0.95 * sc + 0.06, 0.13); lineRoot.add(tip);
+        const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.3, 14), chrome); peg.rotation.x = Math.PI / 2 - 0.18; peg.position.set(0, 0.035, -0.02); pivot.add(peg);
+        const tip = new THREE.Mesh(new THREE.SphereGeometry(0.024, 14, 10), chrome); tip.position.set(0, 0.06, 0.13); pivot.add(tip);
       }
       else pivot.position.set(px, y, 0);
       pivot.add(p.root); lineRoot.add(pivot);
@@ -289,14 +289,14 @@ const extraRoot = new THREE.Group(); extraRoot.position.y = A.extra; scene.add(e
 let PL = null, plFaces = [], trailMat = null, curve = null; const travellers = [];
 async function buildExtra() {
   const X = NG.extra;
-  try { await Promise.race([Promise.all([document.fonts.load('italic 300 100px Fraunces'), document.fonts.load('600 24px "Inter Tight"')]), new Promise((r) => setTimeout(r, 2500))]); } catch (e) {}
+  try { await Promise.race([Promise.all([document.fonts.load('italic 800 100px Fraunces'), document.fonts.load('600 24px "Inter Tight"')]), new Promise((r) => setTimeout(r, 2500))]); } catch (e) {}
   if (X.type === 'private') {
     plFaces = X.faces.map((f) => privateFace(f));
     const back = await tex(X.back);
     PL = makePack(plFaces[0], back, X.aspect); PL.root.scale.setScalar(1.05); extraRoot.add(PL.root);
     const bl = blob(1.5, 0.8); bl.position.set(0, -1.9, 0); extraRoot.add(bl);
   } else {
-    const W = MOB ? 2.7 : 6.5; const pts = [new THREE.Vector3(-W, -1.2, -6), new THREE.Vector3(-W * 0.45, 1.2, -4), new THREE.Vector3(W * 0.1, 1.8, -3.5), new THREE.Vector3(W * 0.6, 0.9, -4), new THREE.Vector3(W, -1.1, -6)];
+    const W = MOB ? 2.7 : 5.0, L0 = MOB ? -2.7 : -3.2; const pts = [new THREE.Vector3(L0, -1.2, -6), new THREE.Vector3(lerp(L0, W, 0.27), 1.2, -4), new THREE.Vector3(lerp(L0, W, 0.55), 1.8, -3.5), new THREE.Vector3(lerp(L0, W, 0.8), 0.9, -4), new THREE.Vector3(W, -1.1, -6)];
     curve = new THREE.CatmullRomCurve3(pts);
     trailMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, toneMapped: false, uniforms: { uP: { value: 0 }, uT: { value: 0 } },
       vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
@@ -316,7 +316,7 @@ function privateFace(f) { // generated "your brand" pouch art
   x.fillStyle = 'rgba(255,255,255,.18)'; for (let i = 0; i < 1200; i += 14) x.fillRect(0, i, 630, 3); // crimp texture top/bottom
   x.fillStyle = g; x.fillRect(0, 70, 630, 1040);
   x.globalCompositeOperation = 'destination-out'; x.beginPath(); x.roundRect(255, 26, 120, 40, 20); x.fill(); x.globalCompositeOperation = 'source-over';
-  x.fillStyle = 'rgba(255,255,255,.9)'; x.font = 'italic 400 104px "Fraunces", Georgia, serif'; x.textAlign = 'center'; x.fillText(f.name, 315, 330);
+  x.fillStyle = 'rgba(255,255,255,.9)'; x.font = 'italic 800 100px "Fraunces", Georgia, serif'; x.textAlign = 'center'; x.fillText(f.name, 315, 330);
   x.font = '600 34px "Inter Tight", Arial, sans-serif'; x.fillText(f.tag, 315, 400);
   x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 6; x.beginPath(); x.roundRect(124, 520, 382, 531, 22); x.stroke();
   x.font = '600 24px "Inter Tight", Arial, sans-serif'; x.fillText('YOUR ART · YOUR TIERS', 315, 800);
@@ -398,7 +398,7 @@ function buildPath() {
   // narrower desktop screens (tablets, folds, 4:3) pull the camera back so the stage never reaches the copy
   const asp = VW() / VH(), am = M ? 1 : clamp(1.62 / asp, 1, 1.45), cs = NG.hero.cardScale || 1, hf = 1 + (cs - 1) * 0.6;
   const topY = H ? H.cy + H.rise + (CH * cs) / 2 : 1.3, rz = Math.max(0, topY - 1.25) * 1.7, ry = Math.max(0, topY - 1.25) * 0.45;
-  const hz = d(5.0, 6.6) * am, lz = d(NG.line.cam, NG.line.camMobile) * am, xz = d(X.z, X.zMobile) * am, oz = d(5.0, 6.8) * am * hf, ly = A.line + d(0.35, 0.25);
+  const hz = d(5.0, 6.6) * am, lz = d(NG.line.cam, NG.line.camMobile) * am, xz = d(X.z, X.zMobile) * am, oz = d(5.0, 6.8) * am * hf, ly = A.line + d(0.35, NG.line.lyMobile != null ? NG.line.lyMobile : 0.25);
   K = [
     { s: 0, p: [0.35, 0.05, hz + 0.3], l: [0, 0, 0] },
     { s: 0.5, p: [0.35, 0.05, hz + 0.3], l: [0, 0, 0] },
