@@ -1,0 +1,113 @@
+<!doctype html><html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NoGuilt Repacks · Wholesale</title>
+<link rel="canonical" href="https://tcg.noguilt.us/p-r7k2q9.html">
+<meta property="og:title" content="NoGuilt Repacks · Wholesale"><meta property="og:description" content="Sealed packs of genuine Pokémon and sports cards with the guarantee printed on the front. Wholesale for retailers."><meta property="og:image" content="https://tcg.noguilt.us/img/og.jpg"><meta property="og:url" content="https://tcg.noguilt.us/p-r7k2q9.html">
+<meta name="description" content="NoGuilt Repacks: sealed packs of genuine Pokémon and sports cards with the guarantee printed on the front. Wholesale for retailers, distributors and chains.">
+<meta name="theme-color" content="#8E67B7">
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="3d/site.css?v=3h">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
+<script>
+const PK = (d, name, guarantee, inside) => ({ front: `3d/tex/p-${d}-front.webp`, back: `3d/tex/p-${d}-back.webp`, aspect: 1200 / 630, name, guarantee, inside });
+const SPEC = '3.15 × 6.0 in pouch · clear window + hang hole · ages 6+';
+window.NG = {
+  shared: '3d/tex/',
+  palette: [
+    { z: '#5B3A9E', m: '#8E67B7', h: '#F4BEDD', b: '#EBDDF4', lit: '#FFF8FC', sh: '#B59AD8' },
+    { z: '#6A3A9A', m: '#A06BC0', h: '#FFC9DF', b: '#F3DDEC', lit: '#FFF5FA', sh: '#BE97D4' },
+    { z: '#3E1F66', m: '#753782', h: '#E58BB9', b: '#C9A7D8', lit: '#FCE9F2', sh: '#9A72BC' },
+  ],
+  hero: {
+    front: '3d/tex/dh-front.webp', back: '3d/tex/dh-back.webp', aspect: 1200 / 630, window: [124, 547, 506, 1078], cardBack: '3d/tex/c-back.webp', cardScale: 1, cardY: -0.337,
+    stackZ: [0.006, 0, -0.006, 0.012, -0.012],
+    cards: [{ t: '3d/tex/c-charmander.webp', k: 0 }, { t: '3d/tex/c-squirtle.webp', k: 0 }, { t: '3d/tex/c-bulbasaur.webp', k: 0 }, { t: '3d/tex/c-charizard-ex.webp', k: 1 }, { t: '3d/tex/c-charizard-sir.webp', k: 2 }],
+  },
+  hitHint: 'Double Hit.',
+  line: {
+    rails: true, scale: 0.7, scaleMobile: 0.5, gap: 0.92, gapMobile: 0.66, rowGap: 2.5, rowGapMobile: 1.85, cam: 9.6, camMobile: 13.6,
+    rows: [['dh', 'holo', 'ur', 'mini', 'value'], ['soccer', 'baseball', 'basketball', 'football']],
+    rowsMobile: [['dh', 'holo', 'ur'], ['mini', 'value', 'soccer'], ['baseball', 'basketball', 'football']],
+    items: {
+      dh: PK('double-hit', 'Double Hit Pack', '5 cards · 1 ultra rare + 1 holo guaranteed', 'Ultra rare: ex, V or full art · 1 holo · 3 assorted<br>' + SPEC),
+      holo: PK('holo', 'Holo Pack', '12 cards · 1 holo rare + 1 reverse holo guaranteed', '1 holo rare · 1 reverse holo · 10 assorted<br>' + SPEC),
+      ur: PK('ultra-rare', 'Ultra Rare Pack', '12 cards · 1 ultra rare + 1 holo guaranteed', 'Ultra rare: ex, V or full art · 1 holo · 10 assorted<br>' + SPEC),
+      mini: PK('mini', 'Mini Pack', '3 cards · 1 holo guaranteed', '1 holo · 2 assorted · entry price point<br>' + SPEC),
+      value: PK('value', 'Value Pack', '30 cards · 1 holo rare guaranteed', '1 holo rare · 29 assorted<br>3.94 × 6.7 in stand-up pouch · clear window + hang hole · ages 6+'),
+      soccer: PK('soccer', 'Soccer Loot Pack', '10 cards · 1 insert, parallel or rookie', '1 insert, parallel or rookie · 9 base cards<br>' + SPEC),
+      baseball: PK('baseball', 'Baseball Rookie Pack', '10 cards · 1 rookie card guaranteed', '1 rookie card · 9 base cards<br>' + SPEC),
+      basketball: PK('basketball', 'Basketball Rookie Pack', '10 cards · 1 rookie, insert or parallel', '1 rookie, insert or parallel · 9 base cards<br>' + SPEC),
+      football: PK('football', 'Football Loot Pack', '10 cards · 1 rookie, insert or parallel', '1 rookie, insert or parallel · 9 base cards<br>' + SPEC),
+    },
+  },
+  extra: {
+    type: 'private', aspect: 1200 / 630, back: '3d/tex/p-holo-back.webp',
+    faces: [{ a: '#753782', b: '#D73E92', name: 'Your brand', tag: '1 HIT GUARANTEED' }, { a: '#5B3A9E', b: '#8E67B7', name: 'Store name', tag: '12 CARDS · 1 HOLO' }, { a: '#B8336F', b: '#E88BB9', name: 'Your line', tag: 'SPORTS · 10 CARDS' }],
+    cam: { y: 0.1, z: 5.4, zMobile: 8.0, ly: 0.35, lz: 0 },
+  },
+};
+</script>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vig"></div>
+<div class="loader"><i></i></div>
+<header><a href="./" aria-label="NoGuilt home"><img src="img/logo-color.png" alt="NoGuilt"></a>
+<nav><a class="m-keep" href="./">Imports</a><a href="catalog.html">Catalog</a><a href="p-r7k2q9-specs.html">Specs</a><a class="cta" href="#contact">Wholesale</a></nav></header>
+
+<main>
+<section id="hero" data-s style="height:100vh"><div class="stick"><div class="copy">
+ <p class="label">NoGuilt Repacks · Wholesale 2026</p>
+ <h1>Real cards.<br><em>No guilt.</em></h1>
+ <p>Sealed packs of genuine Pokémon and sports cards, with the guarantee printed on the front.</p>
+ <div class="btns"><a class="btn" href="#tear">Open the pack</a><a class="btn ghost" href="#contact">Wholesale</a></div>
+ <img class="static" src="img/rp2/double-hit-front.webp" alt="NoGuilt Double Hit pack">
+</div></div></section>
+
+<section id="tear" data-s style="height:210vh"><div class="stick"><div class="copy steps">
+ <div class="step on"><p class="label">01 · Genuine cards</p><h2>Every card is <em>real.</em></h2><p>Manufacturer-issued trading cards. No proxies, no reprints.</p></div>
+ <div class="step"><p class="big" id="count">0</p><h2>cards. <em>Two hits.</em></h2><p>Double Hit: 1 ultra rare and 1 holo guaranteed, plus 3 assorted.</p></div>
+ <div class="step"><p class="label">The hit</p><h2>Ultra rare.<br><em>Every pack.</em></h2><p>An ex, V or full-art card, like this one. Card shown is an example; pulls vary.</p></div>
+</div></div></section>
+
+<section id="line" data-s style="height:190vh"><div class="stick"><div class="copy steps">
+ <div class="step on"><p class="label">02 · The line</p><h2>Nine packs.<br><em>Two lines.</em></h2><p>Five Pokémon packs and four sports packs. Tap a pack for what's inside.</p></div>
+ <div class="step"><p class="label">Built for the register</p><h2>Ready to <em>sell.</em></h2>
+  <div class="stats"><div><b>1,000</b><span>packs per master case</span></div><div><b>1 case</b><span>minimum per style</span></div><div><b>2–3 wk</b><span>ships from PO</span></div><div><b>UPC</b><span>on every pack</span></div></div>
+  <p class="hint"><a class="link" href="p-r7k2q9-specs.html">Full specs and UPCs →</a></p></div>
+</div></div></section>
+
+<section id="extra" data-s style="height:150vh"><div class="stick"><div class="copy">
+ <p class="label">03 · Private label</p><h2>Your brand.<br><em>Our line.</em></h2>
+ <ul class="list"><li><span><b>Your name and art</b>, or co-branded with NoGuilt</span></li><li><span><b>Your guarantee tiers</b>, set to your price points</span></li><li><span><b>Pokémon, sports or both</b>, one line or a full program</span></li><li class="m-hide"><span><b>Your UPCs and case packs</b>, quoted per program</span></li></ul>
+ <div class="btns"><a class="btn ghost" href="mailto:info@noguilt.us?subject=Private%20label%20repacks">Ask about private label</a></div>
+</div></div></section>
+
+<section id="open" data-s style="height:150vh"><div class="stick"><div class="copy">
+ <p class="label">04 · Your turn</p><h2>Open <em>a pack.</em></h2><p>Tap the pack, then tap to reveal each card.</p>
+</div></div></section>
+
+<section id="contact" data-s><div class="card">
+ <p class="label">Wholesale</p><h2>Put them on <em >your counter.</em></h2>
+ <p>Wholesale pricing, case packs and item setup sheets for all nine packs. For retailers, distributors and chains.</p>
+ <div class="btns"><a class="btn acc" href="mailto:info@noguilt.us?subject=NoGuilt%20Repacks%20wholesale%20pricing">Get wholesale pricing</a><a class="btn ghost" href="p-r7k2q9-specs.html">See the full catalog</a></div>
+</div></section>
+</main>
+
+<div id="det"><button class="x" aria-label="Close">×</button><b></b><div class="g"></div><div class="i"></div></div>
+<div class="openui"><span id="openhint">Tap the pack</span><button class="btn" id="openbtn">Open</button><button class="btn acc" id="again" hidden>Open another</button></div>
+<div id="hitmsg">Double Hit.</div>
+
+<footer><div class="row"><span>© 2026 NoGuilt Corporation · Miami, Florida · <a href="mailto:info@noguilt.us">info@noguilt.us</a></span>
+ <span class="links"><a href="./">Japanese &amp; Korean imports</a><a href="./">Catalog</a><a href="buy.html">Sell my bulk cards</a></span></div>
+ <p>NoGuilt packs contain genuine licensed trading cards repackaged by NoGuilt Corporation. They are not official booster packs and are not produced, sponsored or endorsed by any league, team, player, card manufacturer, Nintendo, Creatures, GAME FREAK or The Pokémon Company. Pokémon is a trademark of its respective owners. Cards may come from multiple sets, years and previously opened product. Assortment varies. Card images are examples; actual cards vary by pack. Ages 6+.</p>
+</footer>
+<script>
+(function(){var d=document.documentElement;function sec(id){return document.getElementById(id).getBoundingClientRect()}
+function f(){var h=innerHeight,o=sec('open'),c=sec('contact'),l=sec('line'),x=sec('extra');
+d.classList.toggle('atopen',o.top<h*.35&&c.top>h*.85);d.classList.toggle('atline',l.top<h*.4&&l.bottom>h*.6);d.classList.toggle('atextra',x.top<h*.4&&x.bottom>h*.6)}
+addEventListener('scroll',f,{passive:true});f();setTimeout(function(){d.classList.add('ready')},7000)})();
+</script>
+<script type="module" src="3d/engine.js?v=3h"></script>
+</body></html>
